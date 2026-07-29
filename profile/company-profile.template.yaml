@@ -1,0 +1,78 @@
+# Company Profile — the intake schema for your firm.
+#
+# Fill in every field before running your first session (see docs/setup-guide.md, Step 1).
+# This is the one file every other template in this repository reads from: your voice, your
+# services, and your constraints here are what the starter skills in skills/templates/ get
+# parameterized by. A field left blank tends to surface later as inconsistent agent output
+# rather than an obvious error, so resist the urge to skip one and come back later.
+#
+# If you'd rather talk through these questions than fill in YAML directly, work through
+# profile/intake-conversation.md first and transcribe your answers here afterward.
+
+company_profile:
+  name: ""              # Your firm's name, exactly as you want it written.
+  url: ""                # Your site, if you have one. Leave blank if not.
+
+  founder:
+    name: ""              # Your name (or the name of whoever this practice is built around).
+    background: ""        # One or two sentences: what shaped how you think about this work.
+    threads: []           # 3-6 personal threads or experiences that map to how you work.
+                           # Example shape (not a real entry): "Ten years doing X before this
+                           # taught me to notice Y."
+
+  identity:
+    one_sentence: ""      # What your practice is, in one sentence a stranger would understand.
+    positioning: ""        # The fuller positioning statement: what you do and for whom.
+    through_line: ""       # The one thread that connects everything you do, if there is one.
+    values: []             # A short list, each with a one-line explanation of what it means
+                            # in practice (not just the word).
+    constraints: []        # Hard rules you hold yourself to, regardless of client pressure.
+                            # Example shape (not a real entry): "Never promise a timeline I
+                            # haven't scoped."
+
+  voice:
+    tone_qualities: []      # 3-5 words or short phrases describing how your writing should sound.
+    sounds_like: []         # A few example phrases that sound like you.
+    doesnt_sound_like: []   # A few example phrases that don't, even if they're common in your
+                             # field.
+    word_rules:
+      never_use: []          # Words or phrases you ban from your own writing.
+      use_carefully: []      # Words that are fine in some contexts, wrong in others.
+      use_freely: []         # Words you actively like using.
+    writing_anti_patterns: [] # Structural habits to avoid (a phrase-level cliché, a sentence
+                                # shape you're tired of, a rhetorical move that reads as
+                                # generic).
+
+  services:
+    architecture_name: ""  # What you call your own service layers, if you have a name for the
+                            # structure (a made-up example, not a rule: "Consult / Build /
+                            # Sustain").
+    layers: []              # Each layer: name, what it focuses on, the thread connecting it to
+                             # the others.
+    offerings: []           # Each concrete offering: name, scope, what you deliver, which layer
+                             # it belongs to.
+    workshops: []           # Any workshops or facilitated sessions you run, if applicable.
+                             # Leave empty if not.
+
+  core_argument:
+    diagnostic: ""     # What you see in your field that most people miss or underweight.
+    prescriptive: ""    # What you believe should be done differently as a result.
+    stakes: ""          # What happens if someone ignores this. Leave blank if your practice is
+                         # purely operational and doesn't rest on an argument like this; not
+                         # every practice needs one.
+
+  target_market:
+    primary: ""          # Who you're actually trying to reach.
+    size_range: ""        # The rough size or scale of client you work best with.
+    differentiators: []   # What actually sets you apart, in your own words, not a marketing
+                           # list.
+
+  timeline:
+    launch_target: ""    # When you want this practice (or this iteration of it) live.
+    current_phase: ""     # Where you are right now, in your own words.
+    phases: []             # Each phase: name, rough dates, status.
+
+  competitive:
+    competitors: []              # Who you're actually up against, by name or by category.
+    unoccupied_territory: ""      # What nobody else in your space is saying or doing.
+    moat: ""                      # What's genuinely hard for someone else to copy.

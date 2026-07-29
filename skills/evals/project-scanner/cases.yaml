@@ -1,0 +1,62 @@
+# Eval cases for the project-scanner skill template.
+#
+# Each case is runnable by hand: read the fixture, apply the relevant step from
+# skills/templates/project-scanner/SKILL.template.md, and check whether your result matches
+# expected_findings. Invented examples, not real HeyHi content.
+
+cases:
+  - id: project-scanner-01-claimed-vs-actual
+    description: >-
+      A tracking file claiming a phase is complete with no supporting activity should be
+      flagged by Step 3's claimed-vs-actual check.
+    fixture:
+      roadmap: "Phase 1: Intake — Complete (dated three weeks ago)"
+      recent_commits: No commits reference intake work in the last three weeks.
+    input: A scan of a project where the roadmap claims Phase 1 completion but no recent
+      activity supports it.
+    expected_findings:
+      - "Flags Phase 1's 'Complete' status as unsupported by recent activity."
+      - "Recommends verifying the claim directly rather than repeating it in the report at
+        face value."
+    pass_criteria: >-
+      The report surfaces this as a gap to verify, not as a confirmed fact restated from the
+      roadmap.
+
+  - id: project-scanner-02-dashboard-detail-mismatch
+    description: >-
+      A summary count that disagrees with the detailed list behind it should be flagged as a
+      dashboard-vs-detail mismatch.
+    fixture:
+      summary: "3 open items."
+      detail_list: Four distinct open items are actually listed in the detail section.
+    input: A scan where the summary count and the itemized list disagree.
+    expected_findings:
+      - "Flags the mismatch between the stated count (3) and the actual list length (4)."
+    pass_criteria: >-
+      The specific numbers on both sides of the mismatch are named, not just "counts may be
+      off."
+
+  - id: project-scanner-03-unprocessed-intake
+    description: >-
+      A research or findings file that has sat untouched since it arrived should be flagged as
+      unprocessed intake.
+    fixture:
+      intake_folder: One file dated five weeks ago, no reference to it anywhere else in the
+        project.
+    input: A scan of a project with one old, never-referenced intake file.
+    expected_findings:
+      - "Flags the file as unprocessed intake, naming how long it's been sitting."
+    pass_criteria: >-
+      The finding names the specific file and its age, and doesn't bury it inside a generic
+      "some backlog exists" comment.
+
+  - id: project-scanner-04-clean-pass
+    description: >-
+      A project with no stale references, no unresolved mismatches, and no aging intake should
+      produce a clean report with a real current-position computation, not a copy-pasted one.
+    input: A scan of a project where every tracking file agrees and nothing is aging unprocessed.
+    expected_findings: []
+    pass_criteria: >-
+      The report still computes and states a current position from live data (Step 7), even
+      though there's nothing else to flag. A report that skips the position computation because
+      "nothing's wrong" fails this case.

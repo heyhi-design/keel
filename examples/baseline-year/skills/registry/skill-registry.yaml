@@ -1,0 +1,176 @@
+# EXAMPLE — this is a fictional firm.
+#
+# "Baseline Year" is invented for illustration. This is
+# skills/registry/skill-registry.template.yaml adjusted to a filled instance, so the routing
+# entries describe this firm's actual skills rather than the generic starter wording.
+#
+# Copy the template, not this file. See examples/README.md.
+#
+# What changed from the template, and why it is the interesting part: the template's entries are
+# written for skills nobody has filled in yet, so their descriptions and triggers are necessarily
+# generic. Once the skills are real, the routing wording should be too. Note in particular:
+#
+#   - trigger_patterns now carry the phrases this operator actually types, including the tired
+#     ones ("what's on fire", "check my work before I send it"). A trigger nobody says is dead
+#     weight in the index.
+#   - semantic_tags pick up domain vocabulary (inventory, disclosure, assurance, factors), which
+#     is what lets a query like "the new factors dropped, what does that touch" reach the right
+#     skill at all.
+#   - not_for clauses got sharper, because in this practice the collisions are real. The one
+#     that actually fires is voice against session-integrity: "tidy up this email before I send
+#     it" is a wording request, but "tidy up" and "before I send it" are also how you ask for an
+#     end-of-session review, and the two scored 0.34 apart against a 0.4 confidence gap. The
+#     clause that separates them leads with "Email", because a not_for penalty only applies when
+#     the clause's FIRST meaningful word appears in the query — a clause leading with "Tidying"
+#     reads better and would have penalized session-integrity on its own trigger. See
+#     skills/registry/README.md, "A clause can read as correct and do nothing", and verify any
+#     new clause by running every trigger phrase back through the search before trusting it.
+#     The status-pulse pair (project-scanner against session-integrity) is guarded the same way
+#     but has never actually collided here.
+#
+# load_cost_tokens is roughly character_count / 4 of the deployed SKILL.md. Re-derive it when a
+# skill changes materially; a stale cost silently distorts budget-aware routing.
+
+meta:
+  version: "1.2.0"
+  last_updated: "2026-07-01"
+  total_capabilities: 5
+  skills: 5
+  references: 0
+  tools: 0
+
+capabilities:
+
+  - id: voice
+    name: Voice
+    type: skill
+    description: >-
+      Write in Baseline Year's voice across anything a client or prospect reads: report prose,
+      findings lists, client emails, decline letters, site copy, and the prose inside a proposal.
+      Use whenever a draft will leave the outbox with Sam's name on it.
+    semantic_tags:
+      - voice
+      - writing
+      - client email
+      - report prose
+      - decline letter
+      - tone
+    trigger_patterns:
+      - "write this in our voice"
+      - "make this sound like me"
+      - "does this read okay"
+      - "tidy up this email before I send it"
+      - "write the bit explaining why the number moved"
+    dependencies:
+      - skills/voice/reference.md
+    not_for:
+      - "Scoping a whole proposal or SOW document (use proposal)"
+      - "Deciding whether a figure is publishable, which is a judgment call, not a wording one"
+    load_cost_tokens: 1945
+    location: .claude/skills/voice/SKILL.md
+
+  - id: proposal
+    name: Proposal
+    type: skill
+    description: >-
+      Draft a scoped proposal for a prospective reporting engagement, matched to one offering
+      from the Measure / Disclose / Hold list, in Baseline Year's voice, never stating a fee.
+      Includes the two-stage lookup that routes a report-only request back to Measure.
+    semantic_tags:
+      - proposal
+      - SOW
+      - scope
+      - engagement
+      - inventory build
+      - readiness review
+    trigger_patterns:
+      - "draft a proposal"
+      - "scope this engagement"
+      - "turn Tuesday's call into a proposal"
+      - "they want something in writing by Friday"
+    dependencies:
+      - skills/proposal/reference.md
+    not_for:
+      - "Wording or tone on copy that already exists (use voice)"
+      - "Checking where an existing engagement stands (use project-scanner)"
+    load_cost_tokens: 1963
+    location: .claude/skills/proposal/SKILL.md
+
+  - id: session-integrity
+    name: Session Integrity
+    type: skill
+    description: >-
+      End-of-session review: audit this session's own output for figure drift, stripped
+      data-quality tiers, unchecked boundary changes, and stale downstream references, then
+      propagate what changed. Use at the end of any substantial session.
+    semantic_tags:
+      - session review
+      - integrity check
+      - propagation
+      - close out
+      - figure drift
+    trigger_patterns:
+      - "tidy up before we stop"
+      - "did we miss anything"
+      - "close this out properly"
+      - "check my work before I send it"
+    dependencies:
+      - skills/session-integrity/references/review-checklist.md
+      - os/corrections/corrections-registry.yaml
+    not_for:
+      - "A quick where-are-we pulse with no session to close (use project-scanner)"
+      - "Email wording or tone before a message goes out (use voice)"
+    load_cost_tokens: 1666
+    location: .claude/skills/session-integrity/SKILL.md
+
+  - id: project-scanner
+    name: Project Scanner
+    type: skill
+    description: >-
+      On-demand pulse across every live engagement, organized by distance to each client's
+      mandatory reporting date: what landed, what is waiting on a client, what is blocked, what
+      needs attention this week.
+    semantic_tags:
+      - status
+      - project pulse
+      - where are we
+      - overdue
+      - reporting deadline
+      - waiting on client
+    trigger_patterns:
+      - "where am I"
+      - "catch me up"
+      - "what's on fire"
+      - "what did I forget"
+    dependencies:
+      - skills/project-scanner/reference.md
+    not_for:
+      - "Reviewing and closing a session you just finished (use session-integrity)"
+    load_cost_tokens: 1411
+    location: .claude/skills/project-scanner/SKILL.md
+
+  - id: intelligence-processor
+    name: Intelligence Processor
+    type: skill
+    description: >-
+      Take in a regulatory update, a republished emission factor, a standard-setter decision, or
+      a finding from an engagement, and work out what it changes across the practice files and
+      every live client, proposing rather than silently applying.
+    semantic_tags:
+      - research
+      - regulatory update
+      - emission factors
+      - change proposal
+      - recalculation threshold
+      - propagation
+    trigger_patterns:
+      - "the new factors are out, what does that touch"
+      - "does this change anything for our clients"
+      - "process this guidance"
+      - "what does this finding change"
+    dependencies:
+      - skills/intelligence-processor/reference.md
+    not_for:
+      - "Applying a change that has already been reviewed and approved (that is just the edit)"
+    load_cost_tokens: 1635
+    location: .claude/skills/intelligence-processor/SKILL.md

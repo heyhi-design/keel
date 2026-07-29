@@ -1,0 +1,172 @@
+# KEEL · CONFIGURATION TEMPLATE
+# File: skills/registry/skill-registry.template.yaml
+#
+# What this is: the discovery-aware capability index for your firm's skills. It is how an agent
+#   finds the right skill for a task instead of loading every skill every session ("Earn the
+#   Room" applied to context). This template ships the SCHEMA already populated with the FIVE
+#   starter skills in skills/templates/, so the search has something real to route against out of
+#   the box. Adjust each entry to your filled-in skills, and add one for every new skill you write.
+# When it loads: on demand, via skill-registry.py, when an agent needs to route a task.
+# How to fill it: rename this file to skill-registry.yaml (drop ".template") so the search script
+#   finds it by default, point each entry's `location` at where you deploy that skill (see the
+#   location convention below), and run `python3 skill-registry.py --stats` to confirm it parses.
+#   Delete this comment block when done.
+# Note on --stats: with these five starter skills registered, --stats already shows a positive
+#   saving in a typical session. The figure only reads negative if you cut the registry down to
+#   one or two capabilities, where the flat discovery cost exceeds the whole tiny index. Savings
+#   compound with the number of skills.
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# Per-entry schema:
+#   id               - unique kebab-case identifier
+#   name             - human-readable name
+#   type             - skill | reference | tool
+#   description      - natural-language description used for matching
+#   semantic_tags    - keywords that widen the search surface
+#   trigger_patterns - exact phrases that activate this capability with the highest weight
+#   dependencies     - files co-loaded with this capability (paths that exist on disk)
+#   not_for          - phrases that SUPPRESS this capability (negative scoring). This is how
+#                      two similar skills disambiguate: a query that matches a not_for clause is
+#                      steered away. A clause may end with a routing hint like "(use other-skill)".
+#   load_cost_tokens - estimated token cost when loaded (roughly character_count / 4)
+#   location         - path to the skill's file, as your runtime loads it. The starter entries
+#                      below use the Claude Code convention, .claude/skills/<name>/SKILL.md; if
+#                      your runtime loads skills from somewhere else, use that path instead. The
+#                      starter templates ship at skills/templates/<name>/SKILL.template.md before
+#                      you fill and deploy them.
+# ─────────────────────────────────────────────────────────────────────────────
+
+meta:
+  version: "0.1.0"
+  last_updated: null
+  total_capabilities: 5
+  skills: 5
+  references: 0
+  tools: 0
+
+capabilities:
+
+  # These five entries describe the starter skills this repository ships in skills/templates/.
+  # They are populated so the search has something real to route against before you have written
+  # anything of your own. Adjust each one's wording to match your filled-in skills, and add an
+  # entry for every new skill you write. The session-integrity / project-scanner pair below is a
+  # worked example of not_for disambiguation: both read your tracking files, so each names the
+  # other to keep a quick status request and an end-of-session review from colliding.
+
+  - id: voice
+    name: Voice
+    type: skill
+    description: >-
+      Write in your firm's voice, consistently, across every piece of external-facing content:
+      site copy, emails, social posts, decks, and the prose inside a proposal. Use whenever what
+      you are writing should sound like you rather than generic.
+    semantic_tags:
+      - voice
+      - writing
+      - copy
+      - tone
+      - brand voice
+    trigger_patterns:
+      - "write this in our voice"
+      - "make this sound like us"
+      - "does this sound on-brand"
+      - "reword this copy"
+    dependencies: []
+    not_for:
+      - "Scoping a full proposal or SOW document (use proposal)"
+    load_cost_tokens: 1450
+    location: .claude/skills/voice/SKILL.md
+
+  - id: proposal
+    name: Proposal
+    type: skill
+    description: >-
+      Draft a scoped proposal for a prospective engagement, matched to one offering from your
+      services list, written in your voice, and never stating a price. Use to write a proposal,
+      scope a project, or put together an SOW for a specific prospect.
+    semantic_tags:
+      - proposal
+      - SOW
+      - scope
+      - engagement
+      - pitch
+    trigger_patterns:
+      - "draft a proposal"
+      - "write a proposal"
+      - "scope this engagement"
+      - "put together an SOW"
+    dependencies: []
+    not_for:
+      - "Wording or tone on copy that already exists (use voice)"
+    load_cost_tokens: 1300
+    location: .claude/skills/proposal/SKILL.md
+
+  - id: session-integrity
+    name: Session Integrity
+    type: skill
+    description: >-
+      End-of-session review: check a work session's own output for consistency, catch what it
+      missed, and propagate a change to everything else that depends on it. Use at the end of any
+      substantial session, and offer it proactively after one.
+    semantic_tags:
+      - session review
+      - integrity check
+      - propagation
+      - close out
+      - consistency
+    trigger_patterns:
+      - "wrap up this session"
+      - "review what we did"
+      - "did we miss anything"
+      - "close out the session"
+    dependencies: []
+    not_for:
+      - "A quick where-are-we status pulse with no session to close (use project-scanner)"
+    load_cost_tokens: 1500
+    location: .claude/skills/session-integrity/SKILL.md
+
+  - id: project-scanner
+    name: Project Scanner
+    type: skill
+    description: >-
+      On-demand status pulse: read your tracking files and report what is done, what is overdue,
+      what is blocking, and what needs attention. Use for a quick "where are we" check at any
+      time, not only at a scheduled review.
+    semantic_tags:
+      - status
+      - project pulse
+      - where are we
+      - overdue
+      - progress
+    trigger_patterns:
+      - "where are we"
+      - "what's the status"
+      - "project pulse"
+      - "what's overdue"
+    dependencies: []
+    not_for:
+      - "Reviewing and closing a work session you just finished (use session-integrity)"
+    load_cost_tokens: 1300
+    location: .claude/skills/project-scanner/SKILL.md
+
+  - id: intelligence-processor
+    name: Intelligence Processor
+    type: skill
+    description: >-
+      Take in new research, a finding, or an outside development and work out what it means for
+      what you have already written down, proposing (never silently making) the changes it
+      implies. Use when new information arrives that might change an existing document or plan.
+    semantic_tags:
+      - research
+      - findings
+      - integration
+      - change proposal
+      - propagation
+    trigger_patterns:
+      - "process this research"
+      - "what does this finding change"
+      - "integrate these findings"
+      - "how does this affect our docs"
+    dependencies: []
+    load_cost_tokens: 1200
+    location: .claude/skills/intelligence-processor/SKILL.md

@@ -1,0 +1,7 @@
+# This repository is a scaffold you fill in, not a package you install, so there is no
+# [project] table here and nothing to `pip install .`. The only job of this file is to
+# give pytest a deterministic root, so that `pytest` finds the suite when run from the
+# repository root.
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

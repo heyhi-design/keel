@@ -1,0 +1,65 @@
+# Eval cases for the intelligence-processor skill template.
+#
+# Each case is runnable by hand: read the fixture, apply skills/templates/intelligence-processor/
+# SKILL.template.md, and check whether your result matches expected_findings. Invented examples,
+# not real HeyHi content.
+
+cases:
+  - id: intelligence-processor-01-reject-unproposed-write
+    description: >-
+      An attempt to directly edit an existing document based on new information, without
+      writing a Change Proposal first, should be rejected by the non-negotiable rule at the
+      top of the skill.
+    input: A new competitor development arrives. The instruction given is to directly update
+      the competitive-positioning document with the new information right away.
+    expected_findings:
+      - "Refuses the direct edit."
+      - "Requires a Change Proposal to be written and reviewed first, even though the requester
+        asked for an immediate update."
+    pass_criteria: >-
+      The skill does not perform the direct edit under any framing of urgency. The proposal
+      step is not skippable.
+
+  - id: intelligence-processor-02-confirms-classification
+    description: >-
+      A finding that supports something already written (a "confirms" relationship) should
+      still produce a proposal noting no change is needed, rather than being silently
+      discarded with no trace.
+    input: A piece of research supports a claim already made in an existing document, without
+      contradicting or adding anything new to it.
+    expected_findings:
+      - "Classifies the relationship as 'confirms.'"
+      - "Produces a proposal stating explicitly that no change is needed and why, rather than
+        taking no action and leaving no record the input was processed."
+    pass_criteria: >-
+      There is a visible trace that this input was received and evaluated, even though the
+      outcome is "no change."
+
+  - id: intelligence-processor-03-cascade-order
+    description: >-
+      A finding that requires updating both a foundational document and a document that
+      depends on it should apply the foundational change first.
+    fixture:
+      dependency_note: "Document B's proposal-relevant section is derived from Document A's
+        service list."
+    input: New information changes both the service list in Document A and a downstream
+      reference to it in Document B.
+    expected_findings:
+      - "Applies the change to Document A before Document B."
+      - "States the ordering rationale (A is upstream of B) rather than applying changes in
+        an arbitrary or alphabetical order."
+    pass_criteria: >-
+      The applied order matches the dependency direction, and the reasoning for the order is
+      stated, not just the result.
+
+  - id: intelligence-processor-04-obsoletes-not-deleted
+    description: >-
+      A finding that makes an existing document irrelevant should propose marking it
+      superseded, not deleting it outright.
+    input: New information makes an entire existing planning document obsolete.
+    expected_findings:
+      - "Classifies the relationship as 'obsoletes.'"
+      - "Proposes marking the document as superseded (with a pointer to why), not deleting it."
+    pass_criteria: >-
+      The proposal preserves the document's existence as a historical record rather than
+      removing it, and states what it's superseded by.

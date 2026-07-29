@@ -1,0 +1,147 @@
+# KEEL · CONFIGURATION TEMPLATE
+# File: os/corrections/seed-corrections.yaml
+#
+# What this is: five framework-level correction patterns to start your registry with. These are
+#   not domain-specific mistakes; they are structural to running a firm on an agent harness at
+#   all, so a new instance should not have to rediscover them at its own cost. Merge the entries
+#   you want into your own corrections-registry, then recount your meta block.
+# When it loads: at session start alongside your own active corrections.
+# How to fill it: keep the entries that apply; delete the ones that do not. As your own session
+#   rules mature, some of these become "superseded" by a hard rule you promote (see LIFECYCLE.md
+#   and the two superseded examples below, which point at a rule this OS already ships).
+#
+# Attribution: these framework patterns were distilled by HeyHi (heyhi.design) from real
+#   operating history and released under MIT. Fire counts are reset to zero: they have not fired
+#   in YOUR instance yet.
+#
+# This file is a seed set, not a standalone registry. After merging, recompute your registry's
+# own meta counts per its counting rule.
+
+meta:
+  version: "1.0.0"
+  entry_count: 5
+  active: 3
+  superseded: 2
+
+entries:
+
+  - id: plan-prior-art-blindness
+    category: architectural
+    severity: behavioral
+    status: active
+    trigger_context: >-
+      Any session that produces a plan framed as "evolution," "v2," "next iteration," "update,"
+      "extend," "propagate," or "improvement" of an existing system. Also fires on naming like
+      "[system]-update-plan" or any plan that proposes architecture changes to a named project.
+      Especially risky when the system has multiple instances, deployments, or clients, or when
+      prior strategic work may live in folders, sibling workspaces, or archives the agent did
+      not load at session start.
+    correction: >-
+      Before writing a plan that extends or evolves an existing system: (1) search your
+      cross-session memory for the system name and adjacent terms; (2) run at least one targeted
+      grep across the project, including sibling workspace roots and archive folders, for the
+      system name and variants; (3) read every prior plan, decision-log entry, and update
+      artifact that surfaces, do not skim; (4) cite the prior work explicitly in the new plan's
+      "What This Builds On" section, positioning the new work as extending or superseding
+      specific prior work, never as starting clean. The test: would the author of the prior plan
+      recognize the new plan as an extension of their work, or feel it duplicates and ignores it?
+    pattern: >-
+      An agent writes a plan to extend a system without first discovering that substantial prior
+      work exists, then re-derives gap analyses and decisions already written down. The result is
+      duplicated effort, contradictory recommendations, and a misframed positioning corrected
+      later. Prior art can live outside the repo the agent loaded, so the search must reach
+      sibling workspaces and archives, not only the current tree.
+    times_fired: 0
+    last_fired: null
+    origin_date: null
+
+  - id: web-search-summary-as-primary-source
+    category: factual
+    severity: factual
+    status: superseded
+    superseded_by: >-
+      session-rules.md § Verify-Before-Claim. Once you adopt that standing rule, this
+      specific pattern is absorbed into it. Until you do, treat this entry as ACTIVE guidance.
+    trigger_context: >-
+      Research sessions that use a web-search tool to verify claims about third parties (people,
+      events, organizations). A generated web-search summary can confidently report a connection
+      between two entities that is actually a conflation of unrelated public facts, and the
+      confidence carries forward because the underlying pages were never re-fetched and read.
+    correction: >-
+      Treat any web-search summary as a hypothesis to verify, not a fact to record. Before any
+      third-party claim enters a note, dossier, or proposal, fetch the primary source (the actual
+      page or profile) and grep for the claim. For high-stakes claims that drive priority, scope,
+      or spend, record the primary-source verification step in the note's sources list.
+    times_fired: 0
+    last_fired: null
+    origin_date: null
+
+  - id: named-instrument-without-source-confirmation
+    category: research
+    severity: factual
+    status: superseded
+    superseded_by: >-
+      session-rules.md § Verify-Before-Claim. Once you adopt that standing rule, this
+      specific pattern is absorbed into it. Until you do, treat this entry as ACTIVE guidance.
+    trigger_context: >-
+      Any session that adds a specific named reference, label, or taxonomic term (a named
+      instrument, a pattern name, a cluster label) to a description or client-facing claim, for
+      specificity, without first confirming the name is correct against its source. An inherited
+      "approved" artifact can itself carry an unverified label, and a label can be self-fabricated
+      as readily as inherited.
+    correction: >-
+      Before naming a specific instrument, pattern, or label: (1) grep the relevant source for
+      the name; (2) confirm it is operationally described there, not merely adjacent; (3) if any
+      name in a set is unconfirmed, use general language rather than naming the confirmed ones
+      selectively (partial confirmation is not confirmation); (4) when propagating an inherited
+      label, quote the canonical source's exact wording rather than trusting the copy.
+    times_fired: 0
+    last_fired: null
+    origin_date: null
+
+  - id: synthesis-vs-bucket-record-drift
+    category: architectural
+    severity: factual
+    status: active
+    trigger_context: >-
+      Any session that adds or amends a granular state record (a ledger entry, a per-item status
+      field) in a source-of-truth file, or that touches a downstream summary surface which
+      paraphrases that state elsewhere (a synthesis doc, a services description, a positioning
+      brief). The failure surfaces when the record and a downstream summary disagree about the
+      same fact because the summary was never re-checked after the record changed.
+    correction: >-
+      When a source-of-truth record gains or amends a fact, check every downstream summary that
+      paraphrases it for the same fact in the same session. If a surface lags, log a follow-on
+      item scoped to the type of drift rather than letting the two surfaces diverge further.
+    pattern: >-
+      Records are the audit truth, but summary surfaces are read far more often, so drift stays
+      invisible until someone reads both at once. The fix is to treat downstream summaries as
+      part of the same change, not a later cleanup.
+    times_fired: 0
+    last_fired: null
+    origin_date: null
+
+  - id: split-schema-canonicalization-drift
+    category: architectural
+    severity: behavioral
+    status: active
+    trigger_context: >-
+      Any session that adds a new field, key, or namespace to a schema that already carries a
+      logically related field, such that one logical concept is now expressed by two or more
+      parts (status + status_reason; a state field + an evidence field; a count + a
+      count-justification field). Applies to any state file where multiple fields could each
+      plausibly answer "what is the current state of this thing."
+    correction: >-
+      When extending a schema by splitting one concept into multiple parts, document the
+      canonical relationship in the same change: (1) declare which field is the canonical answer
+      to "what is the state of this thing"; (2) declare what each non-canonical field adds
+      (justification, evidence, timestamp) and that it is a qualifier, never an independent
+      source of truth; (3) state the conflict-resolution rule explicitly. Put the declaration in
+      the schema's own header at the time of the split, not after the first contradiction.
+    pattern: >-
+      Without this discipline a second field accretes autonomy: writers update one and not the
+      other, readers pick whichever they saw first, and the schema produces parallel records of
+      the same fact that drift apart.
+    times_fired: 0
+    last_fired: null
+    origin_date: null

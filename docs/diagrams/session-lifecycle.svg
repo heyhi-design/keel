@@ -1,0 +1,108 @@
+<svg width="100%" viewBox="0 0 680 714" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>Keel: how a session runs</title>
+<desc>Five stages, top to bottom. One: session start, where the always-loaded core arrives before you type anything. Two: routing, where you describe the task, the registry searches, and the confidence gate answers confident, ambiguous, or insufficient. Three: doing the work under verify-before-claim, recomputed values, propagation tiers, and the craft check. Four: the Exit Gate, whose required headers the handoff cannot be emitted without. Five: capturing the correction, which then loads at the next session's start, closing the loop back to stage one.</desc>
+<!-- Keel · Figure 3 of 5: How a session runs. See docs/architecture.md. -->
+
+<style>
+.d{font-family:'Sora',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;}
+.b{font-family:'Lora',Georgia,'Times New Roman',serif;}
+.m{font-family:'DM Mono','SFMono-Regular',ui-monospace,'Cascadia Mono','Courier New',monospace;}
+.paper{fill:#FAFAF5;}
+.ink{fill:#1A1A1A;}.soft{fill:#6B6560;}.faint{fill:#8B857C;}
+.cfg-t{fill:#1F01B9;}
+.stage{fill:#F2F0EA;stroke:#D8D2C6;stroke-width:1;}
+.chip{fill:#FBFAF6;stroke:#C3BAE6;stroke-width:1;}
+.gate-box{fill:#FBFAF6;stroke:#C3BAE6;stroke-width:1;}
+.arr{stroke:#C8BFB3;stroke-width:1.5;fill:none;}
+.arrhead{fill:#C8BFB3;}
+.loop{stroke:#FF3B30;stroke-width:1.5;fill:none;stroke-dasharray:3 3;}
+.loophead{fill:#FF3B30;}
+.loop-t{fill:#FF3B30;}
+@media (prefers-color-scheme:dark){
+.paper{fill:#1A1A1A;}.ink{fill:#F3F0E8;}.soft{fill:#A8A399;}.faint{fill:#7E7970;}
+.cfg-t{fill:#BBB0F0;}
+.stage{fill:#242320;stroke:#3E3B34;}
+.chip{fill:#2E2C27;stroke:#3F3670;}
+.gate-box{fill:#2E2C27;stroke:#3F3670;}
+.arr{stroke:#4A473F;}.arrhead{fill:#4A473F;}
+.loop{stroke:#FF5247;}.loophead{fill:#FF5247;}.loop-t{fill:#FF5247;}
+}
+</style>
+
+<rect class="paper" x="0" y="0" width="680" height="714"/>
+
+<text class="m faint" x="40" y="36" font-size="10.5" letter-spacing="1.6">KEEL</text>
+<text class="d ink" x="40" y="62" font-size="21" font-weight="600">How a session runs</text>
+<text class="b soft" x="40" y="84" font-size="12.5">Start oriented, route to one skill, work, then close through the same gate every time.</text>
+
+<!-- 01 SESSION START -->
+<rect class="stage" x="40" y="100" width="600" height="84" rx="14"/>
+<text class="m faint" x="62" y="126" font-size="10">01</text>
+<text class="d ink" x="92" y="126" font-size="15" font-weight="600">Session start</text>
+<text class="b soft" x="92" y="145" font-size="11.5">The always-loaded core arrives before you type anything.</text>
+<g class="m cfg-t" font-size="9.5" text-anchor="middle">
+<rect class="chip" x="92" y="154" width="96" height="20" rx="6"/><text x="140" y="168">agent context</text>
+<rect class="chip" x="198" y="154" width="136" height="20" rx="6"/><text x="266" y="168">operating principles</text>
+<rect class="chip" x="344" y="154" width="124" height="20" rx="6"/><text x="406" y="168">active corrections</text>
+</g>
+<line class="arr" x1="340" y1="184" x2="340" y2="198"/><polygon class="arrhead" points="334,198 346,198 340,204"/>
+
+<!-- 02 ROUTE -->
+<rect class="stage" x="40" y="204" width="600" height="120" rx="14"/>
+<text class="m faint" x="62" y="230" font-size="10">02</text>
+<text class="d ink" x="92" y="230" font-size="15" font-weight="600">Route to one skill</text>
+<text class="b soft" x="92" y="249" font-size="11.5">You describe the task · the registry searches · the confidence gate answers.</text>
+<rect class="gate-box" x="92" y="266" width="168" height="46" rx="8"/>
+<text class="m cfg-t" x="104" y="286" font-size="9.5">confident</text>
+<text class="m soft" x="104" y="302" font-size="8.5">load it, go</text>
+<rect class="gate-box" x="274" y="266" width="168" height="46" rx="8"/>
+<text class="m cfg-t" x="286" y="286" font-size="9.5">ambiguous</text>
+<text class="m soft" x="286" y="302" font-size="8.5">surface both, ask</text>
+<rect class="gate-box" x="456" y="266" width="168" height="46" rx="8"/>
+<text class="m cfg-t" x="468" y="286" font-size="9.5">insufficient</text>
+<text class="m soft" x="468" y="302" font-size="8.5">load nothing, say so</text>
+<line class="arr" x1="340" y1="324" x2="340" y2="338"/><polygon class="arrhead" points="334,338 346,338 340,344"/>
+
+<!-- 03 WORK -->
+<rect class="stage" x="40" y="344" width="600" height="84" rx="14"/>
+<text class="m faint" x="62" y="370" font-size="10">03</text>
+<text class="d ink" x="92" y="370" font-size="15" font-weight="600">Do the work</text>
+<text class="b soft" x="92" y="389" font-size="11.5">Reversible changes go straight in. The rules govern how, not whether.</text>
+<g class="m cfg-t" font-size="9.5" text-anchor="middle">
+<rect class="chip" x="92" y="398" width="128" height="20" rx="6"/><text x="156" y="412">verify before claim</text>
+<rect class="chip" x="230" y="398" width="112" height="20" rx="6"/><text x="286" y="412">recompute values</text>
+<rect class="chip" x="352" y="398" width="118" height="20" rx="6"/><text x="411" y="412">propagation tiers</text>
+<rect class="chip" x="480" y="398" width="84" height="20" rx="6"/><text x="522" y="412">craft check</text>
+</g>
+<line class="arr" x1="340" y1="428" x2="340" y2="442"/><polygon class="arrhead" points="334,442 346,442 340,448"/>
+
+<!-- 04 EXIT GATE -->
+<rect class="stage" x="40" y="448" width="600" height="108" rx="14"/>
+<text class="m faint" x="62" y="474" font-size="10">04</text>
+<text class="d ink" x="92" y="474" font-size="15" font-weight="600">The Exit Gate</text>
+<text class="b soft" x="92" y="493" font-size="11.5">The handoff cannot be emitted without it. An empty header is a visible failure.</text>
+<g class="m cfg-t" font-size="9.5" text-anchor="middle">
+<rect class="chip" x="92" y="502" width="94" height="20" rx="6"/><text x="139" y="516">Fixes Applied</text>
+<rect class="chip" x="196" y="502" width="77" height="20" rx="6"/><text x="234" y="516">Smoke Test</text>
+<rect class="chip" x="283" y="502" width="128" height="20" rx="6"/><text x="347" y="516">Next Session Prompt</text>
+<rect class="chip" x="92" y="528" width="134" height="20" rx="6"/><text x="159" y="542">Findings Integration</text>
+<rect class="chip" x="236" y="528" width="117" height="20" rx="6"/><text x="294" y="542">Session Integrity</text>
+</g>
+<text class="m faint" x="424" y="516" font-size="8.5">Flavor A · every session</text>
+<text class="m faint" x="366" y="542" font-size="8.5">Flavor B adds · when a session touches a plan</text>
+<line class="arr" x1="340" y1="556" x2="340" y2="570"/><polygon class="arrhead" points="334,570 346,570 340,576"/>
+
+<!-- 05 CAPTURE -->
+<rect class="stage" x="40" y="576" width="600" height="72" rx="14"/>
+<text class="m faint" x="62" y="602" font-size="10">05</text>
+<text class="d ink" x="92" y="602" font-size="15" font-weight="600">Capture the correction</text>
+<text class="b soft" x="92" y="621" font-size="11.5">A mistake becomes an entry, not a note you'll re-explain next week.</text>
+
+<!-- return loop -->
+<path class="loop" d="M 640 612 H 660 V 142 H 648"/>
+<polygon class="loophead" points="648,136 648,148 640,142"/>
+<text class="m loop-t" x="652" y="380" font-size="9" text-anchor="middle" transform="rotate(-90 652 380)">loads at the next session's start</text>
+
+<text class="b soft" x="40" y="678" font-size="12.5" font-style="italic">The wrong skill loaded confidently is worse than no skill at all.</text>
+<text class="m faint" x="40" y="700" font-size="9.5">The runtime enforces none of this. Your configuration does. These stages are discipline, not a feature.</text>
+</svg>

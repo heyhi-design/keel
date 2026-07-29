@@ -1,0 +1,36 @@
+# Optional dependencies for the memory adapter (memory/).
+#
+# The adapter is OPT-IN. The rest of the Keel scaffold does not need
+# any of this — see the top-level requirements.txt.
+#
+# ── v1 default: keyword-only, ZERO dependencies ────────────────────────────
+# With nothing installed here, the adapter runs on Python's built-in sqlite3
+# and FTS5 keyword search. No vector search, no embedder, no model download,
+# no network — fully offline. This is the whole store out of the box, and it
+# needs none of the packages below.
+#
+# ── Optional follow-on: semantic (vector) recall ───────────────────────────
+# Semantic recall is opt-in and NOT installed by default. To add it you supply
+# two things: a vector index (sqlite-vec) and an embedding model. The adapter
+# then fuses vector recall with the keyword leg; if either piece is missing it
+# degrades cleanly back to FTS5. Uncomment BOTH lines below to install them:
+#
+#    sqlite-vec==0.1.9
+#    fastembed
+#
+# 1. The vector index. sqlite-vec is PRE-v1 (0.x) and its API can break between
+#    releases, so it is pinned exactly — re-run the adapter tests when you bump it.
+#
+# 2. The embedding model. No model is bundled in-tree. The reference choice is
+#    fastembed (Apache-2.0), a small, torch-free, local embedder, wrapped for you
+#    by the shipped FastEmbedEmbedder (memory/embedders/fastembed_embedder.py). It
+#    defaults to sentence-transformers/all-MiniLM-L6-v2 (384-dim, Apache-2.0) and
+#    downloads the model on first use. Wire it in with either:
+#
+#        from memory import create_adapter
+#        from memory.embedders import FastEmbedEmbedder
+#        mem = create_adapter(embedder=FastEmbedEmbedder())   # or: embedder="fastembed"
+#
+#    The seam also accepts any callable str -> list[float] (or an object with
+#    .embed / .encode) plus its dimension, so any embedder works — the adapter
+#    names no model and ships none. See memory/README.md for the full contract.

@@ -1,0 +1,63 @@
+# Eval cases for the session-integrity skill template.
+#
+# Each case is runnable by hand: read the fixture, apply the relevant phase from
+# skills/templates/session-integrity/SKILL.template.md, and check whether your result matches
+# expected_findings. Invented examples, not real HeyHi content.
+
+cases:
+  - id: session-integrity-01-stale-reference
+    description: >-
+      A session that updates a count in one file but leaves a matching stale copy in another
+      file should have the stale copy caught by the forward propagation scan (Phase 5).
+    fixture:
+      project_state: "3 active offerings (updated this session, now accurate)."
+      marketing_summary: "We currently offer 2 core services (not updated this session)."
+    input: A session added a new service offering and updated project-state but not the
+      marketing summary that also states the offering count.
+    expected_findings:
+      - "Flags the marketing summary's count as stale against the updated project-state count."
+      - "Names both file locations, not just the fact that 'something's out of date.'"
+    pass_criteria: >-
+      Both the specific stale file and the specific correct value are named, so the fix is
+      immediately actionable.
+
+  - id: session-integrity-02-claimed-without-evidence
+    description: >-
+      A tracking file marking something "done" with no corresponding commit or test should be
+      flagged by the claimed-vs-actual check (Phase 2).
+    fixture:
+      roadmap_entry: "Phase 2: Voice skill — Complete"
+      commit_history: No commit this session or prior touches the voice skill files.
+    input: A session's roadmap update marks the voice skill complete without any corresponding
+      change to the voice skill's own files.
+    expected_findings:
+      - "Flags the 'Complete' status as unsupported by any commit evidence."
+      - "Recommends verifying against the actual file state before trusting the status marker."
+    pass_criteria: >-
+      The finding distinguishes "marked done" from "verified done" and asks for the verification
+      step, rather than accepting the status marker at face value.
+
+  - id: session-integrity-03-empty-exit-gate-section
+    description: >-
+      A session report missing one of the Exit Gate's required sections should be flagged as a
+      failure, not silently passed.
+    input: A session report includes Fixes Applied and Smoke Test, but has no Findings
+      Integration section at all (not even an empty one noting "nothing found").
+    expected_findings:
+      - "Flags the missing Findings Integration section as an Exit Gate failure."
+      - "Distinguishes this from a present-but-empty section (which would need its own
+        justification, e.g., 'no findings, verified by X')."
+    pass_criteria: >-
+      A missing section and an empty-but-justified section are treated differently: the first
+      is always a failure, the second passes only if it states why nothing was found.
+
+  - id: session-integrity-04-clean-pass
+    description: >-
+      A session where every file is consistent, every claim has evidence, and every Exit Gate
+      section is present should pass with no findings beyond routine confirmation.
+    input: A session with no stale references, no unsupported "done" claims, and a complete
+      report.
+    expected_findings: []
+    pass_criteria: >-
+      Zero findings, but the report still explicitly states what was checked (see Phase 8's
+      instruction to state "no fixes needed, verified by X" rather than leaving sections blank).

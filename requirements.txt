@@ -1,0 +1,17 @@
+# Runtime dependencies for the Keel scaffold.
+#
+# Two scripts here execute: skills/registry/skill-registry.py (the discovery search) and
+# skills/evals/lint_cases.py (the eval-case linter). Both need a YAML parser and nothing
+# else. Everything else in this repository is templates and prose.
+#
+#   python3 -m pip install -r requirements.txt
+#
+# For the test suite, install the dev extras too:
+#
+#   python3 -m pip install -r requirements.txt -r requirements-dev.txt
+#
+# The optional memory adapter (memory/) has its own, opt-in dependencies —
+# see memory/requirements.txt. Nothing here needs them; install them only if
+# you use that adapter.
+
+pyyaml>=6.0,<7.0

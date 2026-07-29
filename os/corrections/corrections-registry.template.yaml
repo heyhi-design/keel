@@ -1,0 +1,62 @@
+# KEEL · CONFIGURATION TEMPLATE
+# File: os/corrections/corrections-registry.template.yaml
+#
+# What this is: your firm's correction registry - the mechanism that turns a repeated mistake
+#   into a rule. A mistake becomes a correction; a correction that keeps firing becomes a hard
+#   rule. This is institutional memory that compounds without a growing headcount. This
+#   template ships the SCHEMA and lifecycle only, with ZERO entries. See LIFECYCLE.md for the
+#   promotion mechanics, and seed-corrections.yaml for five framework-level starter entries.
+# When it loads: at session start (the active entries), so an agent avoids known mistakes.
+# How to fill it: add entries as you observe recurring failure patterns. Recompute the meta
+#   counts whenever you add or change status. Delete this comment block when done.
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# Per-entry schema:
+#   id             - unique kebab-case identifier
+#   category       - a grouping label you define (technical | voice | factual | process | ...)
+#   severity       - behavioral | factual (how it fails)
+#   status         - active | retired | superseded  ('promoted' is an ACTION, not a status)
+#   trigger_context- WHEN this fires: the situation that reproduces the mistake
+#   correction     - WHAT to do instead: the specific corrected behavior
+#   times_fired    - how many separate times this pattern has recurred
+#   last_fired     - date of the most recent occurrence (null if never fired here)
+#   origin_date    - when this entry was first written
+#   superseded_by  - (only when status: superseded) where the rule now lives instead
+#   pattern        - (optional) a short description of the failure mode and why it recurs.
+#                    Include it when the "why" is not obvious from trigger_context alone.
+#
+# Note on schema compatibility: the standalone agent-corrections repo ships a compatible schema
+# and its CLI validates severity as exactly one of two values, behavioral or factual. If you
+# pair the repos, keep every severity to those two; any other value fails its validation. The
+# optional `pattern` field exists in both schemas, so it is safe to use in either.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# classification: an optional sensitivity label for your own filing (e.g. internal /
+# confidential / public). Nothing here enforces it; delete this line if you don't classify docs.
+classification: internal
+
+meta:
+  version: "0.1.0"
+  created: null
+  last_updated: null
+  total_corrections: 0
+  active: 0
+  superseded: 0
+  retired: 0
+
+# Add your entries here. The list is empty by design - see seed-corrections.yaml for five
+# framework-level starters you can merge in, and LIFECYCLE.md for how entries move through
+# active -> (promoted to a hard rule) -> superseded.
+entries: []
+  # - id: "[kebab-case-id]"
+  #   category: "[your category]"
+  #   severity: behavioral        # behavioral | factual
+  #   status: active              # active | retired | superseded
+  #   trigger_context: >-
+  #     [The situation that reproduces the mistake. Be concrete enough that a future
+  #      session recognizes it.]
+  #   correction: >-
+  #     [The specific corrected behavior. What to do instead.]
+  #   times_fired: 1
+  #   last_fired: "[YYYY-MM-DD]"
+  #   origin_date: "[YYYY-MM-DD]"

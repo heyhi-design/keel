@@ -1,0 +1,22 @@
+{
+  "_template": "KEEL · CONFIGURATION TEMPLATE - os/dependency-graph.template.json",
+  "_what_this_is": "A machine-readable map of your firm's documents and how they depend on each other. When you change one document, this graph tells you (or an agent) which other documents may now be stale. JSON has no comment syntax, so the guidance lives in these underscore-prefixed keys; delete them once you understand the shape.",
+  "_when_it_loads": "On demand, when a session needs to know what a change propagates to.",
+  "_how_to_fill_it": "Replace the empty 'nodes' map with your own documents. Each node is keyed by its path and lists the paths it depends_on (the edges). Keep the meta block current. Delete every underscore-prefixed key when you are done reading them.",
+  "_node_edge_shape": "nodes are keyed by document path (the graph's vertices). Each node's 'depends_on' array names the paths it relies on (the graph's directed edges). To find what a change to X affects, search for every node whose depends_on contains X.",
+  "meta": {
+    "version": "0.1.0",
+    "last_updated": null,
+    "document_count": 0,
+    "note": "Canonical graph metadata. document_count should equal the number of entries in 'nodes'."
+  },
+  "_example_node": {
+    "path/to/a-document.md": {
+      "description": "one line on what this document is",
+      "depends_on": ["path/to/its-source.md"],
+      "cluster": "optional grouping label"
+    }
+  },
+  "clusters": {},
+  "nodes": {}
+}

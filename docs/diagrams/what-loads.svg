@@ -1,0 +1,99 @@
+<svg width="100%" viewBox="0 0 680 658" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>Keel: what loads, and what doesn't</title>
+<desc>A file tree of the scaffold with a load class on each entry. Always loaded every session: your context file, agent-context, operating-principles, and the active entries of the corrections registry. On demand: session-rules, decision-log, project-state, dependency-graph. Searchable: the skills, of which only the one the registry matches ever loads. Not loaded: the company profile, which fills the other files, and the registry script, which is run rather than read.</desc>
+<!-- Keel · Figure 2 of 5: What loads, and what doesn't. See docs/architecture.md. -->
+
+<style>
+.d{font-family:'Sora',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;}
+.b{font-family:'Lora',Georgia,'Times New Roman',serif;}
+.m{font-family:'DM Mono','SFMono-Regular',ui-monospace,'Cascadia Mono','Courier New',monospace;}
+.paper{fill:#FAFAF5;}
+.ink{fill:#1A1A1A;}.soft{fill:#6B6560;}.faint{fill:#8B857C;}
+.cfg-t{fill:#1F01B9;}.dep-t{fill:#575235;}
+.bd-always{fill:#1A1A1A;stroke:none;}
+.bd-always-t{fill:#FAFAF5;}
+.bd-ondemand{fill:none;stroke:#C8BFB3;stroke-width:1;}
+.bd-search{fill:none;stroke:#C8BFB3;stroke-width:1;stroke-dasharray:3 2;}
+.rule{stroke:#E4E0DA;stroke-width:1;}
+@media (prefers-color-scheme:dark){
+.paper{fill:#1A1A1A;}.ink{fill:#F3F0E8;}.soft{fill:#A8A399;}.faint{fill:#7E7970;}
+.cfg-t{fill:#BBB0F0;}.dep-t{fill:#CBC49E;}
+.bd-always{fill:#F3F0E8;}.bd-always-t{fill:#1A1A1A;}
+.bd-ondemand{stroke:#4A473F;}.bd-search{stroke:#4A473F;}
+.rule{stroke:#332F2A;}
+}
+</style>
+
+<rect class="paper" x="0" y="0" width="680" height="658"/>
+
+<text class="m faint" x="40" y="36" font-size="10.5" letter-spacing="1.6">KEEL</text>
+<text class="d ink" x="40" y="62" font-size="21" font-weight="600">What loads, and what doesn't</text>
+<text class="b soft" x="40" y="84" font-size="12.5">Earn the Room, made concrete. Most of the scaffold never enters a session.</text>
+
+<!-- tree -->
+<g class="m ink" font-size="11.5" xml:space="preserve">
+<text x="62" y="126">your-firm-os/</text>
+<text x="62" y="148">├── CLAUDE.md</text>
+<text class="faint" x="62" y="170">│</text>
+<text x="62" y="192">├── os/</text>
+<text x="62" y="214">│   ├── agent-context.md</text>
+<text x="62" y="236">│   ├── operating-principles.md</text>
+<text x="62" y="258">│   ├── corrections-registry.yaml</text>
+<text x="62" y="280">│   ├── session-rules.md</text>
+<text x="62" y="302">│   ├── decision-log.md</text>
+<text x="62" y="324">│   ├── project-state.yaml</text>
+<text x="62" y="346">│   └── dependency-graph.json</text>
+<text class="faint" x="62" y="368">│</text>
+<text x="62" y="390">├── profile/</text>
+<text x="62" y="412">│   └── company-profile.yaml</text>
+<text class="faint" x="62" y="434">│</text>
+<text x="62" y="456">└── skills/</text>
+<text x="62" y="478">    ├── registry/skill-registry.py</text>
+<text x="62" y="500">    └── templates/ → .claude/skills/</text>
+</g>
+
+<!-- layer tags -->
+<text class="m cfg-t" x="148" y="192" font-size="10">← Configuration</text>
+<text class="m dep-t" x="172" y="390" font-size="10">← Deployment</text>
+<text class="m dep-t" x="164" y="456" font-size="10">← Deployment</text>
+
+<!-- badges -->
+<g class="m" font-size="8.5" text-anchor="middle">
+<rect class="bd-always" x="340" y="136" width="52" height="17" rx="5"/><text class="bd-always-t" x="366" y="148">ALWAYS</text>
+<rect class="bd-always" x="340" y="202" width="52" height="17" rx="5"/><text class="bd-always-t" x="366" y="214">ALWAYS</text>
+<rect class="bd-always" x="340" y="224" width="52" height="17" rx="5"/><text class="bd-always-t" x="366" y="236">ALWAYS</text>
+<rect class="bd-always" x="340" y="246" width="52" height="17" rx="5"/><text class="bd-always-t" x="366" y="258">ALWAYS</text>
+<rect class="bd-ondemand" x="340" y="268" width="68" height="17" rx="5"/><text class="soft" x="374" y="280">ON DEMAND</text>
+<rect class="bd-ondemand" x="340" y="290" width="68" height="17" rx="5"/><text class="soft" x="374" y="302">ON DEMAND</text>
+<rect class="bd-ondemand" x="340" y="312" width="68" height="17" rx="5"/><text class="soft" x="374" y="324">ON DEMAND</text>
+<rect class="bd-ondemand" x="340" y="334" width="68" height="17" rx="5"/><text class="soft" x="374" y="346">ON DEMAND</text>
+<rect class="bd-search" x="340" y="488" width="74" height="17" rx="5"/><text class="soft" x="377" y="500">SEARCHABLE</text>
+</g>
+
+<!-- notes -->
+<g class="m faint" font-size="9">
+<text x="440" y="148">you write this; it points at os/</text>
+<text x="440" y="258">active entries only</text>
+<text x="440" y="280">at session close</text>
+<text x="340" y="412">not loaded · it fills the others</text>
+<text x="340" y="478">not loaded · it's run, not read</text>
+<text x="440" y="500">only the match loads</text>
+</g>
+
+<!-- legend -->
+<line class="rule" x1="40" y1="528" x2="640" y2="528"/>
+<g class="m" font-size="8.5" text-anchor="middle">
+<rect class="bd-always" x="62" y="546" width="52" height="17" rx="5"/><text class="bd-always-t" x="88" y="558">ALWAYS</text>
+<rect class="bd-ondemand" x="300" y="546" width="68" height="17" rx="5"/><text class="soft" x="334" y="558">ON DEMAND</text>
+<rect class="bd-search" x="62" y="574" width="74" height="17" rx="5"/><text class="soft" x="99" y="586">SEARCHABLE</text>
+</g>
+<g class="m soft" font-size="9">
+<text x="124" y="558">every session</text>
+<text x="378" y="558">when the task calls for it</text>
+<text x="146" y="586">only the skill the registry matches</text>
+</g>
+<text class="m faint" x="380" y="586" font-size="9">indigo = Configuration · olive = Deployment</text>
+
+<text class="b soft" x="40" y="620" font-size="12.5" font-style="italic">Five skills fit in a session. Forty don't, and the failure is quiet.</text>
+<text class="m faint" x="40" y="644" font-size="9.5">Load classes are design intent. Your runtime honors them only if your context file says so.</text>
+</svg>

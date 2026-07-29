@@ -1,0 +1,6 @@
+{
+  "_comment": "Example alias map. Copy to entity_aliases.json (same folder) and edit, or point MEMORY_ALIAS_EXTRA at your own file. Format: {\"canonical name\": [\"alias\", ...]}. Both sides are normalized (lowercase, whitespace/underscores collapsed) before lookup. The map is OPTIONAL and empty by default; without it, canonicalization is pure mechanical normalization.",
+  "acme corp": ["acme", "acme inc", "the client"],
+  "your practice": ["the studio", "the firm", "us"],
+  "website relaunch": ["site relaunch", "the relaunch project"]
+}

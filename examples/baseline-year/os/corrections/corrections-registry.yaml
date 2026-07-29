@@ -1,0 +1,123 @@
+# EXAMPLE — this is a fictional firm.
+#
+# "Baseline Year" is invented for illustration, and so is every correction below. This is
+# os/corrections/corrections-registry.template.yaml filled in, so you can see what an entry
+# looks like once it comes from a real recurrence rather than a schema.
+#
+# Copy the template, not this file. See examples/README.md.
+#
+# Three things worth noticing about this registry ten months in:
+#
+#   1. It is small. Four entries. Every one of them fired at least twice before it was written
+#      down, which is the bar — a one-off mistake is not a pattern, and a registry that logs
+#      every stumble stops being read.
+#   2. One is superseded, because it hit the promotion threshold in LIFECYCLE.md (5 total fires,
+#      or the same pattern across 3 separate sessions) and its rule moved into the always-loaded
+#      constraints in os/agent-context.md. The entry stays here, marked, so the history survives.
+#   3. The three active entries are all still below that threshold. That is the normal state:
+#      most corrections do their job as soft notes and never need promoting. Watch the gap
+#      between times_fired and the threshold rather than promoting on instinct.
+
+classification: internal
+
+meta:
+  version: "1.4.0"
+  created: "2025-10-14"
+  last_updated: "2026-06-12"
+  total_corrections: 4
+  active: 3
+  superseded: 1
+  retired: 0
+
+entries:
+
+  - id: estimated-figure-presented-as-measured
+    category: factual
+    severity: factual
+    status: active
+    trigger_context: >-
+      Any draft that carries figures from more than one data-quality tier in the same table,
+      paragraph, or summary slide — a meter-read Scope 2 number next to a spend-based Scope 3
+      estimate, or a supplier-specific factor next to an industry average. The tiering is
+      usually stated correctly in the methodology note, which is the part nobody reads, and
+      absent from the table, which is the part everybody screenshots.
+    correction: >-
+      Attach the data-quality tier to the figure at the point of use, every time, including in
+      tables, summary slides, and email bodies. A parenthetical is enough: "412 tCO2e
+      (spend-based estimate)". Never rely on a methodology note or an appendix to carry the
+      qualification, and never strip the tier when moving a figure between documents — the
+      qualification travels with the number or the number does not travel.
+    pattern: >-
+      Estimates and measurements look identical once they are formatted to the same number of
+      decimal places. The formatting is what does the damage: it launders a screening estimate
+      into something that reads as measured, and the reader who screenshots the table has no
+      way to know which they are holding.
+    times_fired: 2
+    last_fired: "2026-06-12"
+    origin_date: "2025-10-14"
+
+  - id: scope-3-screening-reused-as-inventory
+    category: factual
+    severity: factual
+    status: active
+    trigger_context: >-
+      Reusing a screening-level Scope 3 figure outside the document it was produced for — in a
+      proposal, a report section, a target-setting conversation, or a client email. Screening
+      passes are built to rank categories against each other, using deliberately coarse methods,
+      and they are usually the only Scope 3 number in existence when someone asks for one.
+    correction: >-
+      A screening figure ranks categories; it does not size them. Carry the words "screening
+      only, not for disclosure" with the number every time it moves between documents. If the
+      question being asked actually needs a disclosure-grade figure, say that the number does
+      not exist yet and what it would take to produce it, rather than handing over the screening
+      figure with a caveat that will be dropped in the next forward.
+    times_fired: 2
+    last_fired: "2026-05-28"
+    origin_date: "2026-02-19"
+
+  - id: target-restated-without-baseline-check
+    category: process
+    severity: behavioral
+    status: active
+    trigger_context: >-
+      Writing about a client's published reduction target after anything has moved their
+      inventory boundary: an acquisition or divestment, a facility opening or closing, a
+      corrected emission factor, or a methodology change. The target keeps being quoted in its
+      original form because it is in every deck and nobody re-derives it.
+    correction: >-
+      Whenever the boundary moves, check the recalculation threshold before writing about the
+      target at all. If the threshold is crossed, the baseline year has to be restated and every
+      target published against it moves with it — say so in the same draft, in plain terms,
+      rather than repeating the old target and leaving the restatement to be discovered later.
+      If the threshold is not crossed, note that it was checked and on what date; a future reader
+      cannot tell the difference between "checked, fine" and "never checked."
+    pattern: >-
+      A target is a ratio against a baseline, but it circulates as a single headline number. Once
+      it is in the deck it stops being recalculated, and the boundary change that invalidated it
+      is usually recorded somewhere else entirely, by someone in a different function.
+    times_fired: 2
+    last_fired: "2026-04-07"
+    origin_date: "2026-01-22"
+
+  - id: report-drafted-over-untraced-inventory
+    category: process
+    severity: behavioral
+    status: superseded
+    superseded_by: >-
+      os/agent-context.md § Critical Constraints — "No disclosure over an untraced inventory."
+      Promoted 2026-03-02 on the third fire, which met LIFECYCLE.md's second trigger (the same
+      pattern across three separate sessions). By then it was costing a decision every time it
+      came up rather than a correction. It is now a hard rule in the always-loaded context, and
+      this entry is kept for the history rather than the guidance.
+    trigger_context: >-
+      A prospect arrives with an inventory somebody else built and wants only the disclosure
+      written over it, usually with a deadline close enough that tracing the numbers first looks
+      like an expensive detour.
+    correction: >-
+      Trace the inventory to source before drafting a single sentence, and treat the trace as
+      priced work rather than a formality. If the trace finds something that would move the
+      client's published baseline, say so and decline the writing engagement as scoped instead
+      of drafting around it.
+    times_fired: 3
+    last_fired: "2026-03-02"
+    origin_date: "2025-11-30"

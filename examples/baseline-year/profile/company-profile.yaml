@@ -1,0 +1,247 @@
+# EXAMPLE — this is a fictional firm.
+#
+# "Baseline Year" and everyone in this file are invented for illustration. Nothing here is a
+# real practice, a real person, or real advice about sustainability reporting. It exists to
+# show what profile/company-profile.template.yaml looks like once somebody has actually filled
+# it in, because a page of [BRACKETED SLOTS] does not tell you how much specificity the slots
+# want.
+#
+# Copy the template, not this file. See examples/README.md.
+
+company_profile:
+  name: "Baseline Year"
+  url: "https://example.com/baseline-year"
+
+  founder:
+    name: "Sam Oyelaran (they/them)"
+    background: >-
+      Eight years in-house doing corporate reporting at a mid-size industrial manufacturer,
+      including two spent rebuilding an emissions inventory that had been quietly wrong since
+      the year it was first published. Went solo when mandatory disclosure started pulling
+      mid-market companies into a reporting regime their finance teams had never run before.
+    threads:
+      - >-
+        Rebuilt an inventory that had been wrong for four years. Nobody had lied; every step had
+        been reasonable; the errors were all in the joins between steps. That's where I look now.
+      - >-
+        Sat on the client side of an assurance engagement and could not answer where a number
+        came from. I write everything so that question has an answer before it gets asked.
+      - >-
+        Spent a year as the only person in the building who understood the spreadsheet. That is
+        a failure mode, not a job, and I build myself out of it on every engagement.
+      - >-
+        Came up through finance reporting, not environmental science. I treat an emissions figure
+        the way I'd treat a revenue figure: it has a source, a control, and an owner, or it isn't
+        a figure yet.
+
+  identity:
+    one_sentence: >-
+      Baseline Year gets mid-market companies through their first mandatory sustainability
+      disclosure with numbers that survive an auditor.
+    positioning: >-
+      A one-person reporting practice for companies facing their first mandatory disclosure
+      cycle. I build the emissions inventory, run the materiality work, and get both to a state
+      an assurance provider will sign off on. I work with finance and operations teams who are
+      competent at reporting generally and have never had to report this specific thing before.
+    through_line: >-
+      The report is downstream of the data. Fix the data plumbing and the report writes itself;
+      skip it and no amount of good writing saves you in the assurance window.
+    values:
+      - >-
+        Say the uncertainty out loud. A figure with a stated confidence range is more useful than
+        a confident figure, and far more defensible.
+      - >-
+        The client owns the model. If I leave and the inventory stops being maintainable, I built
+        the wrong thing.
+      - >-
+        Decline work I can't stand behind. A disclosure I ghostwrite over numbers I haven't
+        checked is a liability with my fingerprints on it.
+      - >-
+        Boring beats clever. Reporting rewards the method that a new hire can rerun next year.
+    constraints:
+      - "Never write a disclosure over an inventory I have not personally traced to source."
+      - "Never present an estimate without its data-quality tier attached at the point of use."
+      - >-
+        Never let a client publish a target without checking whether the baseline year still
+        holds under the current boundary.
+      - "No engagement where the scope is 'make it say we're doing well.'"
+
+  voice:
+    tone_qualities:
+      - "plain"
+      - "exact"
+      - "calm under a deadline"
+      - "willing to say 'we don't know yet'"
+    sounds_like:
+      - "The number's defensible or it isn't. Let's find out which."
+      - "That's an estimate. Here's the range, and here's what would narrow it."
+      - "Before we write anything, I want to see what your meters actually record."
+      - "You can publish that. You'll be restating it in eighteen months."
+    doesnt_sound_like:
+      - "Accelerate your net-zero journey."
+      - "We'll help you tell your sustainability story."
+      - "A market-leading approach to ESG reporting."
+      - "Our framework drives measurable impact across your value chain."
+    word_rules:
+      never_use:
+        - "journey"
+        - "story (as in 'sustainability story')"
+        - "leading / market-leading"
+        - "robust (as a filler adjective)"
+        - "green"
+        - "eco-friendly"
+        - "impact (as a verb)"
+        - "commitment (without a number and a date attached)"
+      use_carefully:
+        - >-
+          "net zero" — only with the standard and boundary named; on its own it means eight
+          different things to eight readers.
+        - >-
+          "carbon neutral" — a claim with legal exposure attached. Never in my prose about a
+          client unless they have made it themselves and I am quoting them.
+        - >-
+          "material" — a term of art here. Use it in its reporting sense or don't use it.
+        - >-
+          "verified" — means assured by a third party. Never a loose synonym for "checked".
+      use_freely:
+        - "estimate"
+        - "boundary"
+        - "restate"
+        - "traceable"
+        - "we don't know yet"
+        - "screening-level"
+    writing_anti_patterns:
+      - >-
+        Opening with the regulation instead of the reader's problem. Everyone writing in this
+        space starts with the directive and the deadline. It tells the client nothing they don't
+        already know and wastes the paragraph they actually read.
+      - >-
+        The reassurance sandwich: a real caveat buried between two sentences of encouragement, so
+        the caveat reads as a formality. Put the caveat first and let it stand alone.
+      - >-
+        Adjective stacking on data quality ("comprehensive, rigorous, verified"). Data quality is
+        a tier, not an adjective. Name the tier.
+      - >-
+        Passive constructions that hide who owns a number ("the figure was determined"). Say who
+        determined it, from what.
+      - >-
+        The confident round number. A figure ending in three zeros usually got there by
+        estimation. If it did, say so; if it didn't, put the significant digits back.
+
+  services:
+    architecture_name: "Measure / Disclose / Hold"
+    layers:
+      - name: "Measure"
+        focus: "Get the numbers right, and make them re-runnable by the client next year."
+        thread: "Everything downstream inherits whatever we get wrong here."
+      - name: "Disclose"
+        focus: "Turn a defensible inventory into the report the regime actually asks for."
+        thread: "Writing is the easy half. It is only easy because Measure was done first."
+      - name: "Hold"
+        focus: "Keep it true across reporting cycles as the boundary and the rules move."
+        thread: "A disclosure is an annual obligation, not a project with an end date."
+    offerings:
+      - name: "Inventory Build"
+        layer: "Measure"
+        scope: >-
+          First Scope 1 and 2 inventory from source data, plus a screening-level Scope 3 pass to
+          rank categories. Includes the data-collection model the client runs themselves next year.
+        delivers: "Inventory model, methodology note, data-quality tiering, gap register."
+      - name: "Inventory Repair"
+        layer: "Measure"
+        scope: >-
+          Trace an inherited inventory to source, find where it breaks, and decide with the client
+          what has to be recalculated versus what can be disclosed with a stated limitation.
+        delivers: "Trace report, recalculation decision memo, corrected model."
+      - name: "Double Materiality Assessment"
+        layer: "Disclose"
+        scope: >-
+          Structured impact and financial materiality work, including the stakeholder engagement
+          the assessment has to evidence, ending in a defended topic list.
+        delivers: "Topic list with reasoning per topic, engagement record, methodology note."
+      - name: "First Report"
+        layer: "Disclose"
+        scope: >-
+          Draft the disclosure itself against a completed inventory and materiality assessment.
+          Not sold on its own; see the decision log entry of 2026-03-02.
+        delivers: "Report draft, source map from every figure back to its origin."
+      - name: "Assurance Readiness Review"
+        layer: "Hold"
+        scope: >-
+          Pre-assurance pass: walk the inventory as an assurance provider would, and fix what
+          they would find before they find it.
+        delivers: "Findings list ranked by how hard each is to fix once assurance has started."
+      - name: "Reporting Year Retainer"
+        layer: "Hold"
+        scope: >-
+          The annual cycle: quarterly data checks, boundary-change monitoring, regulation updates
+          that change what has to be disclosed, and the next report.
+        delivers: "Quarterly check note, annual report, running boundary log."
+    # Skipped on purpose: the half-day Scope 3 session runs inside Measure engagements, and is
+    # not something anyone can buy on its own, so listing it here would imply otherwise.
+    workshops: []
+
+  core_argument:
+    diagnostic: >-
+      Most first-time reporters treat disclosure as a writing problem. They hire someone to
+      produce a document, and discover during assurance that the underlying data was never
+      collectable in the form the report claims. By then the deadline is fixed and the only
+      remaining options are bad ones.
+    prescriptive: >-
+      Build the inventory to survive an auditor's questions before writing a sentence of the
+      report. Trace every figure to a source a third party can inspect, tier the data quality
+      honestly, and let the report describe what you actually have rather than what you wish
+      you had measured.
+    stakes: >-
+      A restated baseline year. Once the baseline moves, every target published against it moves
+      with it, and the next reporting cycle gets spent explaining the restatement instead of the
+      reduction. That is a credibility cost you pay in public and cannot pay off early.
+
+  target_market:
+    primary: >-
+      Mid-market companies entering mandatory disclosure for the first time, usually with a
+      competent finance function and no in-house sustainability reporting experience.
+    size_range: >-
+      Roughly 250 to 2,000 employees. Below that the obligation usually is not binding yet;
+      above it there is normally an internal team and my role changes shape.
+    differentiators:
+      - >-
+        I came from finance reporting, not environmental consulting, so I build inventories with
+        controls and an audit trail rather than as a modelling exercise.
+      - >-
+        I hand over a model the client can run without me. Most of my competitors' commercial
+        interest runs the other way.
+      - >-
+        I will tell a client their number is not ready to publish, which is the part of the
+        service clients actually cite when they refer someone.
+
+  timeline:
+    launch_target: "2025-09-01"
+    current_phase: >-
+      Second full reporting cycle. Three retained clients, which is roughly the ceiling for one
+      person during the Q1 crunch, so the current question is what to do with demand above that.
+    phases:
+      - name: "Setup"
+        dates: "2025-06 to 2025-09"
+        status: "done"
+      - name: "First reporting cycle"
+        dates: "2025-09 to 2026-04"
+        status: "done"
+      - name: "Second cycle, plus deciding whether to stay solo"
+        dates: "2026-05 to 2027-04"
+        status: "in progress"
+
+  competitive:
+    competitors:
+      - "Big-four sustainability practices (priced for a different client, staffed by juniors)"
+      - "Boutique ESG consultancies (strong on strategy, thin on data controls)"
+      - "Reporting software vendors (sell the container, not the contents)"
+      - "The client's own finance team, doing it themselves with a spreadsheet and no sleep"
+    unoccupied_territory: >-
+      Nobody is selling the honest pre-assurance conversation. Every other option in the market is
+      structurally motivated to tell a client their data is in better shape than it is, because
+      the engagement that follows is bigger if everyone stays optimistic.
+    moat: >-
+      Not the method, which is public. It is having sat on both sides of an assurance engagement
+      and knowing which questions actually get asked, plus a client base that stays because I told
+      them the uncomfortable thing early once.

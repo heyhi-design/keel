@@ -1,0 +1,151 @@
+# CI for keel.
+#
+# GitHub Actions only discovers workflows in a repo's root .github/workflows/,
+# so as staged here (inside a larger monorepo, at
+# releases/open-source/keel/.github/workflows/ci.yml) this file
+# is inert -- it does not run in the monorepo's CI. It activates once this
+# tree becomes its own repository root, where these paths are correct as
+# written.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+# A newer push to the same PR/ref supersedes an in-flight run.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.9", "3.11", "3.13"]
+        include:
+          - os: windows-latest
+            python-version: "3.11"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run test suite
+        run: python -m pytest tests/ -v
+
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate every YAML file parses
+        run: |
+          python3 - <<'EOF'
+          import sys, glob, yaml
+
+          # glob's ** skips dot-directories, so .github/ (this workflow file included)
+          # would never be validated. Add it explicitly; a set dedupes any overlap.
+          paths = set(
+              glob.glob("**/*.yaml", recursive=True)
+              + glob.glob("**/*.yml", recursive=True)
+              + glob.glob(".github/**/*.yaml", recursive=True)
+              + glob.glob(".github/**/*.yml", recursive=True)
+          )
+          failures = []
+          for path in sorted(paths):
+              try:
+                  with open(path) as f:
+                      list(yaml.safe_load_all(f))
+              except Exception as exc:
+                  failures.append(f"{path}: {exc}")
+
+          if failures:
+              print("YAML parse failures:")
+              for f in failures:
+                  print(f" - {f}")
+              sys.exit(1)
+          print("All YAML files parse cleanly.")
+          EOF
+
+      - name: Validate every JSON file parses
+        run: |
+          python3 - <<'EOF'
+          import sys, glob, json
+
+          failures = []
+          for path in glob.glob("**/*.json", recursive=True):
+              try:
+                  with open(path) as f:
+                      json.load(f)
+              except Exception as exc:
+                  failures.append(f"{path}: {exc}")
+
+          if failures:
+              print("JSON parse failures:")
+              for f in failures:
+                  print(f" - {f}")
+              sys.exit(1)
+          print("All JSON files parse cleanly.")
+          EOF
+
+      # Parsing as YAML only proves a case file is YAML. This proves each case is a case:
+      # required fields present, ids unique across the whole corpus.
+      - name: Lint the structure of every eval case
+        run: python3 skills/evals/lint_cases.py
+
+  markdown-links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for obviously broken relative links
+        run: |
+          python3 - <<'EOF'
+          import re, glob, os, sys
+
+          link_re = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
+          failures = []
+
+          for md_path in glob.glob("**/*.md", recursive=True):
+              base_dir = os.path.dirname(md_path)
+              with open(md_path, encoding="utf-8") as f:
+                  text = f.read()
+              for match in link_re.finditer(text):
+                  target = match.group(1).split("#")[0].strip()
+                  if not target or target.startswith(("http://", "https://", "mailto:")):
+                      continue
+                  resolved = os.path.normpath(os.path.join(base_dir, target))
+                  if not os.path.exists(resolved):
+                      failures.append(f"{md_path}: broken relative link -> {target}")
+
+          if failures:
+              print("Broken relative links found:")
+              for f in failures:
+                  print(f" - {f}")
+              sys.exit(1)
+          print("No broken relative links found.")
+          EOF

@@ -1,0 +1,79 @@
+# Eval cases for the voice skill template.
+#
+# Each case is runnable by hand: read the fixture and input, apply skills/templates/voice/
+# SKILL.template.md against them, and check whether your result matches expected_findings.
+# These are invented examples for the template, not real HeyHi content.
+
+cases:
+  - id: voice-01-banned-word-catch
+    description: >-
+      A draft that uses two words from the profile's "never use" list should have both flagged
+      by name, not just given a general "this feels off" reaction.
+    fixture:
+      profile_excerpt: |
+        voice:
+          word_rules:
+            never_use: ["synergy", "leverage"]
+    input: |
+      "We'll leverage our synergy with your team to deliver faster outcomes."
+    expected_findings:
+      - "Flags 'leverage' as a banned word, by name."
+      - "Flags 'synergy' as a banned word, by name."
+    pass_criteria: >-
+      Both banned words are named specifically in the findings. A finding that says only
+      "this doesn't sound right" without naming the words fails this case.
+
+  - id: voice-02-generic-opener
+    description: >-
+      A generic opening sentence that could apply to any firm should be flagged against the
+      "sounds like us / doesn't sound like us" examples, even though it uses no banned words.
+    fixture:
+      profile_excerpt: |
+        voice:
+          sounds_like: ["We build it in from the start."]
+          doesnt_sound_like: ["We deliver innovative solutions tailored to your needs."]
+    input: |
+      "Our team delivers tailored solutions designed to meet your unique business needs."
+    expected_findings:
+      - "Flags the opener as matching the doesnt_sound_like pattern, not just as 'weak writing.'"
+      - "Notes that no single word is banned here; the finding is about the sentence shape, not
+        a word-list match."
+    pass_criteria: >-
+      The finding correctly identifies this as a structural/genericness problem, distinct from
+      a banned-word violation, and doesn't just default to "sounds fine, no banned words found."
+
+  - id: voice-03-format-rule-violation
+    description: >-
+      A short-form piece that exceeds the format rule for its content type should be flagged
+      against that specific rule, not a generic "too long" comment.
+    fixture:
+      profile_excerpt: |
+        content_type_rules:
+          social_post: "Under 40 words. One idea only."
+    input: |
+      A 90-word social post covering three separate ideas about the firm's services, its
+      founding story, and an upcoming workshop, all in one post.
+    expected_findings:
+      - "Flags the word count against the stated 40-word limit, with the actual count named."
+      - "Flags that the post covers three ideas against the 'one idea only' rule."
+    pass_criteria: >-
+      Both the length violation and the multiple-ideas violation are named against the specific
+      stated rule, not merged into one vague comment.
+
+  - id: voice-04-clean-pass
+    description: >-
+      A draft that follows every stated rule should produce zero findings. This case guards
+      against a skill that always finds something regardless of input quality.
+    fixture:
+      profile_excerpt: |
+        voice:
+          word_rules:
+            never_use: ["synergy"]
+          tone_qualities: ["direct", "specific"]
+    input: |
+      "We looked at your last three releases and found the same pattern breaking twice. Here's
+      what we'd change first."
+    expected_findings: []
+    pass_criteria: >-
+      Zero findings are reported. A result that manufactures a finding here (e.g., flagging a
+      word that isn't actually on any list) fails this case.

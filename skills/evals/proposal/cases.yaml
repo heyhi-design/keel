@@ -1,0 +1,63 @@
+# Eval cases for the proposal skill template.
+#
+# Each case is runnable by hand: read the fixture and input, apply skills/templates/proposal/
+# SKILL.template.md's pre-send check against them, and check whether your result matches
+# expected_findings. Invented examples, not real HeyHi content.
+
+cases:
+  - id: proposal-01-pricing-leak
+    description: >-
+      A draft proposal that states a specific number anywhere should fail the pre-send check,
+      regardless of how it's phrased.
+    input: |
+      Logistics section reads: "This engagement is $12,345 for the first phase, billed at
+      completion."
+    expected_findings:
+      - "Flags the specific dollar figure as a pricing leak."
+      - "Recommends replacing it with the approved pricing-deferral language, not just removing
+        the number."
+    pass_criteria: >-
+      The number itself is named as the problem, and the fix recommended is the deferral
+      language, not merely "consider rewording."
+
+  - id: proposal-02-vague-scope
+    description: >-
+      "The work" section written in language too vague to prevent a later scope disagreement
+      should be flagged, even though it contains no pricing and no banned words.
+    input: |
+      The Work section reads: "We'll help modernize your design system and make sure everything
+      is more consistent going forward."
+    expected_findings:
+      - "Flags the section as too vague to define what's in and out of scope."
+      - "Names at least one specific missing element (e.g., no deliverable, no boundary on what
+        'everything' covers)."
+    pass_criteria: >-
+      The finding identifies the vagueness specifically (what's missing), not just a general
+      "make this more specific" comment.
+
+  - id: proposal-03-missing-contract-gate
+    description: >-
+      A post-acceptance workflow that starts billable work before the stated gating condition
+      (e.g., signed contract) is confirmed should be flagged as a process violation.
+    input: |
+      Session log: "Client replied 'sounds good, let's start.' Beginning discovery work today;
+      will send the contract over by end of week."
+    expected_findings:
+      - "Flags that billable work started before the contract gate was satisfied."
+      - "Recommends confirming the gate explicitly before starting work, not assuming a verbal
+        yes is sufficient."
+    pass_criteria: >-
+      The gate violation is named explicitly as a process issue, not folded into a generic
+      "communicate more clearly with the client" comment.
+
+  - id: proposal-04-clean-pass
+    description: >-
+      A well-scoped proposal with no pricing and a specific work section should pass the
+      pre-send check with zero findings.
+    input: |
+      The Work section names three specific deliverables with a boundary on what's excluded.
+      Logistics closes with: "Let's talk about what fits for your timeline and budget."
+    expected_findings: []
+    pass_criteria: >-
+      Zero findings. A result that invents a scope complaint against a genuinely specific
+      section fails this case.

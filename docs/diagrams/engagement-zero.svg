@@ -1,0 +1,93 @@
+<svg width="100%" viewBox="0 0 680 512" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>Keel: Engagement Zero</title>
+<desc>Three panels, left to right. One, the running instance: HeyHi is a firm of one, run on a written operating system since March 2026, its Engagement Zero, with fifteen months documented. Two, the extraction: take out the specifics (voice, clients, history) and keep the structure that made them work, the schema and the mechanism. Three, the scaffold: Keel, the same structure, empty, for you to fill in. Below: the extraction itself ran on the harness, so the machinery that produced the repo is the machinery the repo describes.</desc>
+<!-- Keel · Figure 5 of 5: Engagement Zero. See docs/architecture.md. -->
+
+<style>
+.d{font-family:'Sora',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;}
+.b{font-family:'Lora',Georgia,'Times New Roman',serif;}
+.m{font-family:'DM Mono','SFMono-Regular',ui-monospace,'Cascadia Mono','Courier New',monospace;}
+.paper{fill:#FAFAF5;}
+.ink{fill:#1A1A1A;}.soft{fill:#6B6560;}.faint{fill:#8B857C;}
+.hot{fill:#FF3B30;}
+.panel{fill:#F2F0EA;stroke:#D8D2C6;stroke-width:1;}
+.chip{fill:#FBFAF6;stroke:#C8BFB3;stroke-width:1;}
+.chip-hot{fill:#FBFAF6;stroke:#FF3B30;stroke-width:1.5;}
+.arr{stroke:#C8BFB3;stroke-width:1.5;fill:none;}
+.arrhead{fill:#C8BFB3;}
+.rule{stroke:#E4E0DA;stroke-width:1;}
+@media (prefers-color-scheme:dark){
+.paper{fill:#1A1A1A;}.ink{fill:#F3F0E8;}.soft{fill:#A8A399;}.faint{fill:#7E7970;}
+.hot{fill:#FF5247;}
+.panel{fill:#242320;stroke:#3E3B34;}
+.chip{fill:#2E2C27;stroke:#4A473F;}
+.chip-hot{fill:#2E2C27;stroke:#FF5247;}
+.arr{stroke:#4A473F;}.arrhead{fill:#4A473F;}
+.rule{stroke:#332F2A;}
+}
+</style>
+
+<rect class="paper" x="0" y="0" width="680" height="512"/>
+
+<text class="m faint" x="40" y="36" font-size="10.5" letter-spacing="1.6">KEEL</text>
+<text class="d ink" x="40" y="62" font-size="21" font-weight="600">Engagement Zero</text>
+<text class="b soft" x="40" y="84" font-size="12.5">The scaffold is the operating system of the firm that built it, with the specifics taken out.</text>
+
+<!-- 01 THE RUNNING INSTANCE -->
+<rect class="panel" x="40" y="110" width="180" height="180" rx="14"/>
+<text class="m faint" x="56" y="134" font-size="10">01</text>
+<text class="d ink" x="56" y="156" font-size="13" font-weight="600">The running instance</text>
+<g class="b soft" font-size="10.5">
+<text x="56" y="178">A firm of one, run on a</text>
+<text x="56" y="192">written operating system</text>
+<text x="56" y="206">since March 2026.</text>
+</g>
+<g class="m ink" font-size="8.5" text-anchor="middle">
+<rect class="chip" x="56" y="222" width="148" height="20" rx="6"/><text x="130" y="236">Engagement Zero</text>
+<rect class="chip" x="56" y="248" width="148" height="20" rx="6"/><text x="130" y="262">15 months documented</text>
+</g>
+
+<line class="arr" x1="222" y1="200" x2="242" y2="200"/><polygon class="arrhead" points="242,196 242,204 248,200"/>
+
+<!-- 02 THE EXTRACTION -->
+<rect class="panel" x="250" y="110" width="180" height="180" rx="14"/>
+<text class="m faint" x="266" y="134" font-size="10">02</text>
+<text class="d ink" x="266" y="156" font-size="13" font-weight="600">The extraction</text>
+<g class="b soft" font-size="10.5">
+<text x="266" y="178">Take out the specifics:</text>
+<text x="266" y="192">voice, clients, history.</text>
+<text x="266" y="206">Keep what made them work.</text>
+</g>
+<g class="m ink" font-size="8.5" text-anchor="middle">
+<rect class="chip" x="266" y="222" width="148" height="20" rx="6"/><text x="340" y="236">specifics · out</text>
+<rect class="chip" x="266" y="248" width="148" height="20" rx="6"/><text x="340" y="262">structure · kept</text>
+</g>
+
+<line class="arr" x1="432" y1="200" x2="452" y2="200"/><polygon class="arrhead" points="452,196 452,204 458,200"/>
+
+<!-- 03 THE SCAFFOLD -->
+<rect class="panel" x="460" y="110" width="180" height="180" rx="14"/>
+<text class="m faint" x="476" y="134" font-size="10">03</text>
+<text class="d ink" x="476" y="156" font-size="13" font-weight="600">The scaffold</text>
+<g class="b soft" font-size="10.5">
+<text x="476" y="178">The same structure,</text>
+<text x="476" y="192">empty. You fill it in</text>
+<text x="476" y="206">with your own practice.</text>
+</g>
+<g class="m" font-size="8.5" text-anchor="middle">
+<rect class="chip" x="476" y="222" width="148" height="20" rx="6"/><text class="ink" x="550" y="236">Keel</text>
+<rect class="chip-hot" x="476" y="248" width="148" height="20" rx="6"/><text class="hot" x="550" y="262">yours to fill</text>
+</g>
+
+<!-- THE RECURSION -->
+<rect class="panel" x="40" y="316" width="600" height="86" rx="14"/>
+<text class="d ink" x="62" y="344" font-size="15" font-weight="600">The extraction ran on the harness.</text>
+<g class="b soft" font-size="11.5">
+<text x="62" y="366">The dispatch prompts that produced this repo, the corrections that caught its mistakes, the</text>
+<text x="62" y="384">Exit Gate it closed through. All of it is the machinery this repo describes.</text>
+</g>
+
+<line class="rule" x1="40" y1="432" x2="640" y2="432"/>
+<text class="d ink" x="40" y="462" font-size="16" font-weight="600">That architecture is the product.</text>
+<text class="m faint" x="40" y="488" font-size="9.5">Engagement Zero is one firm. One instance is evidence the pattern works here, not proof it travels.</text>
+</svg>

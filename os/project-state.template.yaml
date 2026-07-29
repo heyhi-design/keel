@@ -1,0 +1,72 @@
+# KEEL · CONFIGURATION TEMPLATE
+# File: os/project-state.template.yaml
+#
+# What this is: the machine-readable ground truth for your firm. An integrity routine reads
+#   this to detect "context rot" (drift between what this file claims and what the project
+#   actually looks like). This template ships the SCHEMA only, with empty values. Populate it
+#   as your firm takes shape.
+# When it loads: on demand, by your integrity/scan routine.
+# How to fill it: replace the empty values below with your own. Keep the field shapes. Let your
+#   integrity routine update this file rather than editing it by hand once you have one.
+#
+# ─────────────────────────────────────────────────────────────────────────────
+
+# classification: an optional sensitivity label for your own filing (e.g. internal /
+# confidential / public). Nothing here enforces it; delete this line if you don't classify docs.
+classification: internal
+
+meta:
+  version: "0.1.0"
+  last_synced: null          # date your integrity routine last reconciled this file
+  synced_by: null            # which routine/session did it
+  note: >
+    This file is the comparison baseline for the integrity pass. It records what the project
+    looks like when it is in lockstep with itself. Any deviation between this file and the
+    actual project state is context rot.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PHASES
+# The lifecycle stages of your firm's build-out. Update status as phases move.
+# status values: not-started | active | complete
+# ─────────────────────────────────────────────────────────────────────────────
+phases: []
+  # - id: phase-1
+  #   name: "[Phase name]"
+  #   status: not-started       # not-started | active | complete
+  #   note: "[what 'done' means for this phase]"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CAPABILITIES / SKILLS
+# Source of truth for what skills exist and where they live. An integrity routine
+# compares this against the skills folder on disk and the registry.
+# ─────────────────────────────────────────────────────────────────────────────
+capabilities:
+  count: 0
+  last_verified: null
+  skills: []
+    # - id: "[skill-id]"
+    #   name: "[Human-readable name]"
+    #   purpose: "[one line]"
+    #   path: "[path to the skill folder]"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# EARLY WARNING SIGNALS
+# Structural indicators that predict where scaling friction will appear. Each carries a
+# threshold, a current status, and the action to take when it fires. An integrity routine
+# checks these and flags any that have gone stale. The value is catching drift early:
+# a signal left at "fired" long after its fix shipped is itself a rot signal.
+#
+# current_status values: ok | watch | fired | resolved
+# ─────────────────────────────────────────────────────────────────────────────
+early_warning_signals: []
+  # - id: "[signal-id]"
+  #   description: "[what this signal watches for]"
+  #   threshold: "[the condition that fires it]"
+  #   current_status: ok         # ok | watch | fired | resolved
+  #   last_checked: null
+  #   action: "[what to do when it fires]"
+
+# Example signal shapes you may want (delete or adapt):
+#   - orientation cost: fires when a session must read N+ files before productive work starts
+#   - capability sprawl: fires when the skill count passes the point where a registry is needed
+#   - focus balance: fires after N consecutive infra sessions with no client-facing output

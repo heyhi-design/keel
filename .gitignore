@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local environments
+.venv/
+venv/
+env/
+
+# Written by `skill-registry.py --log-gaps`. It records the queries you route through the
+# registry, which is a running log of what you are actually working on. It is a local
+# diagnostic for deciding when keyword matching has stopped discriminating well enough --
+# not something to commit, and not something to publish.
+skills/registry/score-gap-log.jsonl
+
+# Your filled-in registry, if you would rather keep it out of version control. Delete this
+# line if you want the registry tracked, which most people will.
+# skills/registry/skill-registry.yaml
