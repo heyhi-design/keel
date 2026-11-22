@@ -116,6 +116,11 @@ jobs:
       - name: Lint the structure of every eval case
         run: python3 skills/evals/lint_cases.py
 
+      # No file tagged `origin: keel` may reference instance-private content, so a base file
+      # stays provably liftable. See keelson/README.md.
+      - name: Check base/instance separability
+        run: python3 keelson/separability_check.py
+
   markdown-links:
     runs-on: ubuntu-latest
     timeout-minutes: 10

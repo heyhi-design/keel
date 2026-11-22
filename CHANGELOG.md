@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once a first version is
 tagged.
 
+## [0.2.0] - 2026-09-04
+
+Structure proven inside a keel instance, funnelled back down into the base. The headline is the
+separability convention that keeps a base file provably liftable; two smaller additive lifts ride
+with it.
+
+### Added
+
+- **keelson, the separability convention (`keelson/`)** : a file that belongs to the shareable
+  base declares `origin: keel`; a file specific to your instance declares `origin: instance`.
+  `keelson/separability_check.py` is the lint that enforces the promise -- it fails if an
+  `origin: keel` file references a path you have declared instance-private (the `examples`
+  directory by default; extend with `--private`). A reference is an import, a quoted path, or a
+  Markdown link -- not a bare prose mention -- so a document can still describe the boundary it
+  keeps. Wired into CI, and covered by `tests/test_separability.py`. See `keelson/README.md`.
+- **Optional coverage-state fields on the skill registry** : `coverage`, `nature`, `phase`, and
+  `foundation` are now documented as optional, additive fields on a registry entry
+  (`skills/registry/skill-registry.template.yaml`). The search engine preserves them on load and
+  ignores them for scoring, so they change no routing decision; they exist for a coverage view
+  over your own skills. The field set is generic, the values are yours.
+- **A corrections key-contract test (`tests/test_corrections_contract.py`)** : pins the
+  corrections registry to the `entries:` key its reader expects, so the schema and the tool that
+  reads it cannot drift apart unnoticed.
+
 ## [0.1.0] - 2026-07-29
 
 The first public release: a scaffold you fill in, not a product you configure.

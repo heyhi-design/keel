@@ -34,6 +34,22 @@
 #                      your runtime loads skills from somewhere else, use that path instead. The
 #                      starter templates ship at skills/templates/<name>/SKILL.template.md before
 #                      you fill and deploy them.
+#
+# Optional coverage-state fields (added in v0.2.0). All four are optional and additive: the
+# search engine does not read them -- it preserves them on load and ignores them for scoring --
+# so adding any of them to an entry changes no routing decision, and omitting them costs nothing.
+# They exist for a coverage view over your own registry: which areas your skills cover, which are
+# thin, and where each capability sits in its life. The field *set* is generic; the values are
+# yours -- fill only the ones that are true for your instance.
+#   coverage         - how fully your skills cover this capability's area:
+#                      deep | covered | partial | gap
+#   nature           - a short descriptor of the kind of capability, in your own vocabulary
+#                      (e.g. "audit", "author", "router"), for grouping related skills
+#   phase            - where this capability is in its life (e.g. planned | building | deployed),
+#                      so a registry can show what exists versus what is still coming
+#   foundation       - the id of the domain area or foundation this capability serves. The
+#                      routing semantics that consume it arrive with the foundations slot in a
+#                      later release; until then it is a descriptive back-reference you can group by.
 # ─────────────────────────────────────────────────────────────────────────────
 
 meta:
@@ -76,6 +92,12 @@ capabilities:
       - "Scoping a full proposal or SOW document (use proposal)"
     load_cost_tokens: 1450
     location: .claude/skills/voice/SKILL.md
+    # Optional coverage-state fields (v0.2.0). Uncomment and set the ones true for you; the
+    # engine ignores them, so they are safe to leave off entirely.
+    # coverage: covered
+    # nature: author
+    # phase: deployed
+    # foundation: voice-and-tone
 
   - id: proposal
     name: Proposal
