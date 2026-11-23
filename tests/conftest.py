@@ -123,3 +123,82 @@ def sample_registry():
             location="reference/greenhouse.md",
         ),
     ]
+
+
+# ── helpers for the few-person tools (os/*.py, keelson/*.py) ────────────────
+#
+# The tools are scripts, not a package, so each is loaded from its path. The git helper runs
+# with a fixed identity and no signing, and without the developer's global or system git
+# config, so a scratch repository behaves the same on every machine and in CI.
+
+import os
+import subprocess
+
+
+def load_tool(relative, name):
+    """Load a keel tool script (e.g. "os/resolve_operator.py") as a module."""
+    path = REPO_ROOT / relative
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def git_env(tmp_root):
+    env = dict(os.environ)
+    empty = Path(tmp_root) / ".gitconfig-empty"
+    empty.write_text("", encoding="utf-8")
+    env.update(
+        GIT_CONFIG_GLOBAL=str(empty),
+        GIT_CONFIG_NOSYSTEM="1",
+        GIT_AUTHOR_NAME="Test Operator",
+        GIT_AUTHOR_EMAIL="test-operator@example.com",
+        GIT_COMMITTER_NAME="Test Operator",
+        GIT_COMMITTER_EMAIL="test-operator@example.com",
+        GIT_TERMINAL_PROMPT="0",
+    )
+    return env
+
+
+class Repo:
+    """A scratch git repository for the tool tests."""
+
+    def __init__(self, path, env):
+        self.path = Path(path)
+        self.env = env
+
+    def git(self, *args, cwd=None, check=True):
+        out = subprocess.run(
+            ["git", "-c", "commit.gpgsign=false", "-c", "core.autocrlf=false", *args],
+            cwd=str(cwd or self.path), env=self.env, capture_output=True, text=True,
+        )
+        if check and out.returncode != 0:
+            raise AssertionError(f"git {' '.join(args)} failed: {out.stderr}")
+        return out.stdout.strip()
+
+    def write(self, rel, text):
+        target = self.path / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(text, encoding="utf-8")
+        return target
+
+    def commit(self, message="change"):
+        self.git("add", "-A")
+        self.git("commit", "-q", "-m", message)
+        return self.git("rev-parse", "HEAD")
+
+
+@pytest.fixture
+def scratch_repo(tmp_path, monkeypatch):
+    """An empty repository on `main` with one commit, isolated from the machine's git config."""
+    env = git_env(tmp_path)
+    for key in ("GIT_CONFIG_GLOBAL", "GIT_CONFIG_NOSYSTEM"):
+        monkeypatch.setenv(key, env[key])
+    root = tmp_path / "instance"
+    root.mkdir()
+    repo = Repo(root, env)
+    repo.git("init", "-q", "-b", "main")
+    repo.write("README.md", "# scratch instance\n")
+    repo.commit("initial")
+    return repo

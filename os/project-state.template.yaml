@@ -25,6 +25,26 @@ meta:
     actual project state is context rot.
 
 # ─────────────────────────────────────────────────────────────────────────────
+# OPERATING MODE
+# How many people (and parallel sessions) run this instance, and how a session closes.
+# A firm of one leaves these at their defaults and nothing changes. Switch to `few` when a
+# second person can push, or when you run more than one session at a time; see
+# docs/operating-with-more-than-one.md for what changes.
+#   operators            solo | few
+#   close_mode           commit | pr. `pr` is the opt-in PR-only close: no session commits
+#                        straight to the default branch, and the Exit Gate report becomes the
+#                        pull request's body (os/session-rules.md, The Session Close Sequence).
+#   handoff.keep_newest  how many entries each os/handoff/<operator-id>.md keeps before older
+#                        ones rotate to its archive. A starting point for readability, not a
+#                        measured value: tune it to what you can read in one sitting.
+# ─────────────────────────────────────────────────────────────────────────────
+operating_mode:
+  operators: solo            # solo | few
+  close_mode: commit         # commit | pr
+  handoff:
+    keep_newest: 5
+
+# ─────────────────────────────────────────────────────────────────────────────
 # PHASES
 # The lifecycle stages of your firm's build-out. Update status as phases move.
 # status values: not-started | active | complete

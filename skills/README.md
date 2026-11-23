@@ -1,7 +1,7 @@
 # Authoring Skills
 
 A skill is a procedure your agent can find and run: how to write in your voice, how to draft a
-proposal, how to check a session's own work. This repository ships five starter skills as
+proposal, how to check a session's own work. This repository ships seven starter skills as
 templates. This page is how to fill those in, and how to write your own once you need one these
 don't cover.
 
@@ -46,7 +46,7 @@ A skill isn't done until it's registered where your agent can find it by search.
 schema and search script live in `skills/registry/`; see [that folder's own
 README](registry/README.md) for the registry format, the `not_for` field that keeps two similar
 skills from colliding, and how to tune the scoring. Register every skill you deploy, including the
-five starter templates once you've filled them in, so your agent finds the right one by describing
+seven starter templates once you've filled them in, so your agent finds the right one by describing
 the task rather than needing every skill loaded by default.
 
 ## Before you ship a skill
@@ -57,7 +57,22 @@ the task rather than needing every skill loaded by default.
 3. Test: write at least a few eval cases (see `skills/evals/`) before trusting the skill on real
    work. An untested skill is a draft, not a deployed skill.
 
-## The five starter skills
+## Thin triggers over protocols
+
+When a skill's job is to run a procedure that already lives in one of your `os/` files (a start
+sequence, a close sequence), keep the skill thin: name the procedure, run it, report the result,
+and never restate its steps. `session-start` (over `os/session-start.md`) and `session-end` (over
+`os/session-rules.md`) are built this way. Two copies of one procedure drift apart; with one copy
+and a pointer, the only thing left to keep current is the pointer itself.
+
+## Name capabilities, not servers
+
+Write a skill's steps against the capability they need ("read the open items from your issue
+tracker"), never against the name of the server or connector that provides it today. Say what the
+step falls back to when nothing provides it. `os/session-rules.md` (Tools by Capability) has the
+rule; your instance's list of capabilities lives in `os/session-start.md`.
+
+## The seven starter skills
 
 | Skill | What it's for |
 |---|---|
@@ -66,6 +81,8 @@ the task rather than needing every skill loaded by default.
 | `session-integrity` | Checking a work session's own output for consistency and follow-through before calling it done. |
 | `project-scanner` | Producing an on-demand status pulse: what's done, what's overdue, what needs attention. |
 | `intelligence-processor` | Taking in new research or findings and proposing (never silently making) the changes they imply. |
+| `session-start` | Orienting a session before real work: who is running it, where the last session stopped, which branch and tools it has. |
+| `session-end` | Closing a session: persisting the Exit Gate report, rotating the handoff file, and closing by the instance's close mode. |
 
 Each ships as a template under `skills/templates/<name>/`, with eval cases under
 `skills/evals/<name>/cases.yaml`. Fill in the bracketed slots from your completed

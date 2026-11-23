@@ -12,7 +12,7 @@ procedures the task will never touch, and the work gets worse without ever annou
 
 | File | What it is |
 |---|---|
-| `skill-registry.template.yaml` | The index itself: one entry per capability. Ships populated with the five starter skills, so the search works before you have written anything of your own. |
+| `skill-registry.template.yaml` | The index itself: one entry per capability. Ships populated with the seven starter skills, so the search works before you have written anything of your own. |
 | `skill-registry.py` | The search over that index. Keyword and tag matching, a confidence gate, and a token-savings report. |
 
 Rename the template to `skill-registry.yaml` (drop the `.template`) so the script finds it
@@ -28,7 +28,7 @@ python3 -m venv .venv && source .venv/bin/activate   # optional but recommended
 python3 -m pip install -r requirements.txt
 ```
 
-Then, from this directory (`skills/registry/`). These run against the five starter skills the
+Then, from this directory (`skills/registry/`). These run against the seven starter skills the
 template ships with, so they work before you have written anything of your own:
 
 ```bash
@@ -50,7 +50,7 @@ python3 skill-registry.py --registry skill-registry.template.yaml --list
 Once you rename the file to `skill-registry.yaml`, drop the `--registry` flag: the script
 looks for that name by default.
 
-One thing worth knowing about `--stats`, and it is not a bug: at the five starter skills it
+One thing worth knowing about `--stats`, and it is not a bug: at the seven starter skills it
 ships with, the registry already reports a positive saving. Cut it down to one or two
 capabilities and the number goes **negative**, because the flat cost of the discovery step is
 larger than the whole index at that size. Savings compound with the number of skills, so the

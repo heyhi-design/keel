@@ -43,16 +43,22 @@ on purpose. If I want to see how much specificity a field is asking for before a
 the same field in `examples/baseline-year/profile/company-profile.yaml` — a worked instance for an
 invented firm. Show me the filled file and let me correct it before you go on.
 
-**Phase 3: Fill in the configuration templates.** For each of the seven `os/` templates
-(`agent-context`, `operating-principles`, `session-rules`, `decision-log`, `project-state`,
-`dependency-graph`, and `corrections/corrections-registry`), fill every `[BRACKETED SLOT]` from my
+**Phase 3: Fill in the configuration templates.** For each of the eight `os/` templates
+(`agent-context`, `operating-principles`, `session-start`, `session-rules`, `decision-log`,
+`project-state`, `dependency-graph`, and `corrections/corrections-registry`), fill every
+`[BRACKETED SLOT]` from my
 profile, remove the authoring guidance (the italic notes and the leading comment block in the
 Markdown and YAML files; the underscore-prefixed `_` keys in `dependency-graph.template.json`,
 which has no comment syntax), and rename the file to drop `.template`. Don't rename
 `os/corrections/LIFECYCLE.md` or `os/corrections/seed-corrections.yaml`; they aren't fill-in
 templates. LIFECYCLE.md is reference; `seed-corrections.yaml` you act on in Phase 4, keeping the
 starter entries I want and dropping the rest, without renaming it. The decision log, project state,
-and dependency graph start essentially empty, which is correct for a new practice.
+and dependency graph start essentially empty, which is correct for a new practice. Then make my
+per-person copies: copy `os/operators/operator.template.md` to `os/operators/<my-operator-id>.md`
+and fill it in with me (my `git_emails` must include the address `git config user.email` prints),
+and copy `os/handoff.template.md` to `os/handoff/<my-operator-id>.md`. Keep both templates in
+place. Leave `operating_mode` in `os/project-state.yaml` at `operators: solo` and
+`close_mode: commit` unless I tell you more than one person will run sessions.
 
 **Phase 4: Merge the starter corrections.** `os/corrections/seed-corrections.yaml` holds five
 framework-level starter corrections. Show me the five, and merge the ones I want into
@@ -61,11 +67,12 @@ actual entries: `total_corrections`, `active`, `superseded`, and `retired`. Do n
 file's counts over blindly; count what you actually merged. Keep every severity to `behavioral` or
 `factual` (those are the only two the schema allows).
 
-**Phase 5: Fill in and deploy the skills.** For each of the five starter skills under
+**Phase 5: Fill in and deploy the skills.** For each of the seven starter skills under
 `skills/templates/` (`voice`, `proposal`, `session-integrity`, `project-scanner`,
-`intelligence-processor`), fill the bracketed slots in `SKILL.template.md` and any
-`reference.template.md` from my profile, and rename them to drop `.template`. Then deploy each skill
-to where my runtime loads skills from. For Claude Code that is `.claude/skills/<name>/SKILL.md`; if
+`intelligence-processor`, `session-start`, `session-end`), fill the bracketed slots in
+`SKILL.template.md` and any `reference.template.md` from my profile, and rename them to drop
+`.template`. Then deploy each skill to where my runtime loads skills from. For Claude Code that is
+`.claude/skills/<name>/SKILL.md`; if
 you don't know my runtime, ask me before you deploy. Keep each skill's reference material with it: a
 flat `reference.md`, or a `references/` folder for the skills that ship one.
 
@@ -75,32 +82,35 @@ flat `reference.md`, or a `references/` folder for the skills that ship one.
 and triggers to match my filled-in skill. Recompute the registry's `meta` counts. Then run
 `python3 skills/registry/skill-registry.py --list` and show me the result.
 
-**Phase 7: Wire it into my runtime.** Follow `docs/setup-guide.md` Step 4 for my runtime. For Claude
-Code, create a `CLAUDE.md` at the repository root that loads my `os/agent-context.md` and
-`os/operating-principles.md`, tells the agent to read the active entries of my
-`os/corrections/corrections-registry.yaml` at the start of every session, points at my on-demand
-`os/` files (`session-rules`, `project-state`, `decision-log`, `dependency-graph`), and includes
-the skill-routing block (before loading any skill, run `skills/registry/skill-registry.py` and load
-only what it returns). For Cowork, set up the folder-connected equivalent. Show me the `CLAUDE.md`
-you wrote.
+**Phase 7: Wire it into my runtime.** Follow `docs/setup-guide.md` Step 4 for my runtime. Fill the
+bracketed slots in the root `AGENTS.md` and delete its setup box and authoring notes: it already
+names my always-loaded core, the skill-routing block, the capability rule, and my on-demand `os/`
+files, so fill it rather than rewrite it. For Claude Code, keep the shipped `CLAUDE.md` as its one
+`@AGENTS.md` import line. For Cowork, point the folder-connected setup at `AGENTS.md`. Show me the
+`AGENTS.md` you filled.
 
 **Phase 8: Prove it worked.** Run each of these checks and report which passed and which need my
 attention. Do not report success on one you didn't actually run.
 
 1. Scan the `os/` templates I filled and my deployed skills for leftover template brackets like
    `[Firm Name]` (there should be none). Skip `os/corrections/seed-corrections.yaml` and
-   `os/dispatch/` (they keep example brackets on purpose), and ignore legitimate empty `[]` arrays
-   and Markdown links. Then run `grep -rn '\.template' os/ .claude/skills/` to catch leftover
-   `.template` pointers: the only expected hit is the rename gloss in `os/corrections/LIFECYCLE.md`.
-   A correctly filled system keeps no `.template` files or cross-references in the paths above, so
-   any other hit there means a rename or a repoint was missed. Keep the grep scoped as written:
+   `os/dispatch/` (they keep example brackets on purpose), and the two per-person templates
+   `os/operators/operator.template.md` and `os/handoff.template.md` (they stay for the next
+   person), and ignore legitimate empty `[]` arrays and Markdown links. Scan `AGENTS.md` too.
+   Then run `grep -rn --include='*.md' --include='*.yaml' --include='*.json' '\.template' os/ .claude/skills/`
+   to catch leftover `.template` pointers (the scripts in `os/` name the templates on purpose, so
+   the grep leaves them out): the expected hits are the rename gloss in
+   `os/corrections/LIFECYCLE.md`, the two per-person templates' own headers, and the line in
+   `os/session-start.md` that tells a session to skip `*.template.md` profiles. Apart from those two kept templates, a correctly filled system keeps no
+   `.template` files or cross-references in the paths above, so any other hit there means a rename
+   or a repoint was missed. Keep the grep scoped as written:
    `examples/` legitimately carries `.template` references (it explains which template each example
    file was filled from) and is not part of your instance, so a wider grep reports defects that
    aren't. For the same reason, resolve files by exact path rather than basename during setup —
    `examples/` contains a second `company-profile.yaml`, `agent-context.md`, `decision-log.md`, and
    `corrections-registry.yaml`, all belonging to a fictional firm.
 2. `python3 skills/registry/skill-registry.py --registry skills/registry/skill-registry.yaml --list`
-   runs without a traceback and lists my five skills.
+   runs without a traceback and lists my seven skills.
 3. `python3 skills/registry/skill-registry.py --registry skills/registry/skill-registry.yaml "draft
    a proposal"` returns my proposal skill.
 4. If I also use the `agent-corrections` tool, its `audit` validates my

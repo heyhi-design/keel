@@ -1,8 +1,12 @@
 # Runtime dependencies for the Keel scaffold.
 #
-# Two scripts here execute: skills/registry/skill-registry.py (the discovery search) and
-# skills/evals/lint_cases.py (the eval-case linter). Both need a YAML parser and nothing
-# else. Everything else in this repository is templates and prose.
+# The scripts here need a YAML parser and nothing else: the discovery search
+# (skills/registry/skill-registry.py), the eval-case linter (skills/evals/lint_cases.py), and
+# the operating tools that read YAML (os/resolve_operator.py, os/handoff_rotate.py,
+# os/cold_start_check.py, os/start_load_check.py, keelson/close_check.py). The other tools
+# (the id allocator, the worktree report, the status lint, the index generator, the
+# separability and context-wall lints) use the standard library only. Everything else in this
+# repository is templates and prose.
 #
 #   python3 -m pip install -r requirements.txt
 #

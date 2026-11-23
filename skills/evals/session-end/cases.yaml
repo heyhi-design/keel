@@ -1,0 +1,71 @@
+# Eval cases for the session-end skill template.
+#
+# Each case is runnable by hand: set up the fixture, run the skill (which runs The Session Close
+# Sequence in os/session-rules.md), and check the files and the close report against
+# expected_findings. Invented examples for a fictional firm.
+
+cases:
+  - id: session-end-01-report-only-in-chat
+    description: >-
+      A close that produces a good Exit Gate report but leaves it only in the chat has not
+      persisted anything; the skill must write it to the handoff file.
+    fixture:
+      operating_mode: "close_mode: commit"
+      handoff_file: "os/handoff/founder.md exists with three earlier entries."
+    input: We're done for today. Close it out.
+    expected_findings:
+      - "Writes the report as a new dated level-2 entry at the top of os/handoff/founder.md."
+      - "The entry carries Fixes Applied, Smoke Test, and Next Session Prompt as level-3 headings."
+    pass_criteria: >-
+      After the close, the report can be read from the tracked handoff file without the chat;
+      a report present only in the chat fails this case.
+
+  - id: session-end-02-rotation-moves-not-deletes
+    description: >-
+      Writing a new entry past the keep-newest limit must move the oldest entries to the archive,
+      unchanged and in order, never delete them.
+    fixture:
+      operating_mode: "handoff.keep_newest: 5"
+      handoff_file: "os/handoff/founder.md holds 5 entries before this close."
+      archive_file: "os/handoff/archive/founder.md holds 12 older entries."
+    input: Close the session.
+    expected_findings:
+      - "The handoff file holds 5 entries after the close: the new one plus the newest 4 old ones."
+      - "The oldest former entry now sits at the top of the archive file, word for word."
+      - "The archive holds 13 entries; no entry exists in neither file."
+    pass_criteria: >-
+      Counting entries across both files gives 18 after the close (17 before plus the new one),
+      and the moved entry is byte-identical to its earlier text.
+
+  - id: session-end-03-pr-mode-methodology-split
+    description: >-
+      In PR close mode, a session that changed both an engagement file and a skill must open
+      separate pull requests, so the skill change reaches its approver on its own.
+    fixture:
+      operating_mode: "operators: few, close_mode: pr"
+      changes: "Edited one engagement notes file and the voice skill's SKILL.md."
+      skill_frontmatter: "The voice skill declares layer: methodology, approver: founder."
+    input: Wrap up and open the PRs.
+    expected_findings:
+      - "Opens one pull request for the engagement change and a separate one for the skill change."
+      - "Names the founder as the approver on the skill change's pull request."
+      - "Each pull request body carries the Exit Gate slots as level-2 headings."
+    pass_criteria: >-
+      No pull request mixes the methodology change with engagement work, and nothing was
+      committed straight to the default branch.
+
+  - id: session-end-04-stranded-branch
+    description: >-
+      A branch with commits that exist only on this machine is not an end state; the close must
+      not report done while one remains.
+    fixture:
+      operating_mode: "close_mode: commit"
+      branch_state: "The session branch has 2 commits not on the remote and is not pushed."
+    input: That's it for now, close the session.
+    expected_findings:
+      - "Reports the branch as holding unpushed commits not on the remote default branch."
+      - "Pushes it as a backup, opens a pull request, or asks whether to abandon it, before
+        reporting the close as complete."
+    pass_criteria: >-
+      The close report names one of the three end states for the branch; "committed locally" on
+      its own fails this case.

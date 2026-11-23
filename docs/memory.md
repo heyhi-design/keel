@@ -20,12 +20,12 @@ don't need yet.
 When you want to search past sessions rather than remember which file they're in, the recommended
 lightweight backend is **SQLite**. In its shipped v1 form it uses **FTS5** (SQLite's built-in
 full-text search) for keyword recall: a single local database file, no server to run, no
-credentials to manage, no model to download — fully offline, and nothing to install beyond Python
+credentials to manage, no model to download. It runs fully offline, and nothing to install beyond Python
 itself.
 
 Recall *by meaning* (finding a past decision by describing it, not by matching its wording) is an
 **optional semantic follow-on**, off by default and installed only when you want it. You add it
-with two packages — the **sqlite-vec** extension for vector similarity and an embedding model — and
+with two packages, the **sqlite-vec** extension for vector similarity and an embedding model, and
 inject the model at the adapter's seam. A reference embedder ships for this:
 `FastEmbedEmbedder` (in [`../memory/embedders/`](../memory/embedders/)) wraps
 [`fastembed`](https://github.com/qdrant/fastembed) (Apache-2.0), a small, local, torch-free
@@ -39,7 +39,7 @@ mem = create_adapter(embedder=FastEmbedEmbedder())   # or: create_adapter(embedd
 ```
 
 No model is bundled in the tree (fastembed downloads it on first use) and none is named inside the
-store — the seam also accepts any callable `str -> list[float]` (or an object with `.embed` /
+store. The seam also accepts any callable `str -> list[float]` (or an object with `.embed` /
 `.encode`), so any embedder works. When both pieces are present the adapter fuses vector recall with
 the keyword leg; when either is missing it degrades cleanly back to FTS5. Keeping the model out of
 the shipped tree is what keeps this backend dependency-light.
@@ -49,11 +49,11 @@ the shipped tree is what keeps this backend dependency-light.
 follow-on simply can't be turned on: the adapter falls back to the FTS5 keyword leg and logs the
 degrade once, so nothing breaks, but installing the two packages won't get you vector recall. If
 you want semantic recall on a Mac, run this against a Homebrew (`brew install python`) or
-python.org interpreter instead — their SQLite builds allow extension loading. Everything else in
+python.org interpreter instead: their SQLite builds allow extension loading. Everything else in
 this repository, including the whole default FTS5 store, works fine on Apple's Python.
 
 This backend sits behind the same tool contract described below, so a skill or workflow written
-against the contract does not change when you move up a tier — or when you later add the semantic
+against the contract does not change when you move up a tier, or when you later add the semantic
 follow-on: it calls the same twelve tools either way. A working reference implementation of this
 shape ships in [`../memory/`](../memory/): a single-file SQLite adapter with FTS5 keyword search by
 default and the optional sqlite-vec + injected-embedder vector leg, behind the twelve-call
@@ -64,11 +64,26 @@ stays the default, and you move up only when searchable recall is worth a local 
 
 ## Tier 3: A server-backed database for scale
 
-For a larger corrections registry, a longer operating history, or multiple people writing to the
-same memory at once, **Postgres with the pgvector extension** is the scale option. This is more
-setup (a running database server, credentials, a backup plan) in exchange for handling more
-concurrent writers and more data than a single local file comfortably holds. Most solo practices
-won't need this tier; it's here for when the practice has grown enough that they do.
+For a larger corrections registry or a longer operating history, **Postgres with the pgvector
+extension** is the scale option. This is more setup (a running database server, credentials, a
+backup plan) in exchange for more data than a single local file comfortably holds. Most solo
+practices won't need this tier; it's here for when the practice has grown enough that they do.
+
+A server database can take writes from several sessions at once, but that alone does not make it
+the place a team keeps shared knowledge. Two people's sessions writing one store, with nothing
+that grants and expires a write lease, can silently undo each other's changes. If more than one
+person runs sessions, keep the firm's shared knowledge in reviewed files in this repository, give
+each operator their own store (or name one session as the only writer that applies the others'
+saves), and read [`operating-with-more-than-one.md`](operating-with-more-than-one.md) before
+pointing two people at one database.
+
+## Personal memory versus shared memory
+
+Your agent runtime probably keeps its own memory of past sessions as well. That memory is
+machine-local and belongs to one person: it does not follow you to a second machine and no other
+operator's session can read it. Treat it as a convenience, never as the record. When something it
+remembers matters to the firm, write it into a shared file (a correction, a decision, a knowledge
+file) so it exists for every session, not just yours.
 
 ## The contract that stays the same across all three
 

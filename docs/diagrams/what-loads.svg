@@ -1,6 +1,6 @@
-<svg width="100%" viewBox="0 0 680 658" role="img" xmlns="http://www.w3.org/2000/svg">
+<svg width="100%" viewBox="0 0 680 746" role="img" xmlns="http://www.w3.org/2000/svg">
 <title>Keel: what loads, and what doesn't</title>
-<desc>A file tree of the scaffold with a load class on each entry. Always loaded every session: your context file, agent-context, operating-principles, and the active entries of the corrections registry. On demand: session-rules, decision-log, project-state, dependency-graph. Searchable: the skills, of which only the one the registry matches ever loads. Not loaded: the company profile, which fills the other files, and the registry script, which is run rather than read.</desc>
+<desc>A file tree of the scaffold with a load class on each entry. Always loaded every session: CLAUDE.md and the AGENTS.md it imports, the Start Sequence in os/session-start.md, agent-context, operating-principles, the active entries of the corrections registry, your own operator profile (the one matching your git email) and only the newest entry of your handoff file. On demand: session-rules, decision-log, project-state, dependency-graph. Searchable: the skills, of which only the one the registry matches ever loads. Not loaded: the company profile, which fills the other files, and the registry script, which is run rather than read.</desc>
 <!-- Keel · Figure 2 of 5: What loads, and what doesn't. See docs/architecture.md. -->
 
 <style>
@@ -24,7 +24,7 @@
 }
 </style>
 
-<rect class="paper" x="0" y="0" width="680" height="658"/>
+<rect class="paper" x="0" y="0" width="680" height="746"/>
 
 <text class="m faint" x="40" y="36" font-size="10.5" letter-spacing="1.6">KEEL</text>
 <text class="d ink" x="40" y="62" font-size="21" font-weight="600">What loads, and what doesn't</text>
@@ -34,66 +34,78 @@
 <g class="m ink" font-size="11.5" xml:space="preserve">
 <text x="62" y="126">your-firm-os/</text>
 <text x="62" y="148">├── CLAUDE.md</text>
-<text class="faint" x="62" y="170">│</text>
-<text x="62" y="192">├── os/</text>
-<text x="62" y="214">│   ├── agent-context.md</text>
-<text x="62" y="236">│   ├── operating-principles.md</text>
-<text x="62" y="258">│   ├── corrections-registry.yaml</text>
-<text x="62" y="280">│   ├── session-rules.md</text>
-<text x="62" y="302">│   ├── decision-log.md</text>
-<text x="62" y="324">│   ├── project-state.yaml</text>
-<text x="62" y="346">│   └── dependency-graph.json</text>
-<text class="faint" x="62" y="368">│</text>
-<text x="62" y="390">├── profile/</text>
-<text x="62" y="412">│   └── company-profile.yaml</text>
-<text class="faint" x="62" y="434">│</text>
-<text x="62" y="456">└── skills/</text>
-<text x="62" y="478">    ├── registry/skill-registry.py</text>
-<text x="62" y="500">    └── templates/ → .claude/skills/</text>
+<text x="62" y="170">├── AGENTS.md</text>
+<text class="faint" x="62" y="192">│</text>
+<text x="62" y="214">├── os/</text>
+<text x="62" y="236">│   ├── session-start.md</text>
+<text x="62" y="258">│   ├── agent-context.md</text>
+<text x="62" y="280">│   ├── operating-principles.md</text>
+<text x="62" y="302">│   ├── corrections-registry.yaml</text>
+<text x="62" y="324">│   ├── operators/&lt;id&gt;.md</text>
+<text x="62" y="346">│   ├── handoff/&lt;id&gt;.md</text>
+<text x="62" y="368">│   ├── session-rules.md</text>
+<text x="62" y="390">│   ├── decision-log.md</text>
+<text x="62" y="412">│   ├── project-state.yaml</text>
+<text x="62" y="434">│   └── dependency-graph.json</text>
+<text class="faint" x="62" y="456">│</text>
+<text x="62" y="478">├── profile/</text>
+<text x="62" y="500">│   └── company-profile.yaml</text>
+<text class="faint" x="62" y="522">│</text>
+<text x="62" y="544">└── skills/</text>
+<text x="62" y="566">    ├── registry/skill-registry.py</text>
+<text x="62" y="588">    └── templates/ → .claude/skills/</text>
 </g>
 
 <!-- layer tags -->
-<text class="m cfg-t" x="148" y="192" font-size="10">← Configuration</text>
-<text class="m dep-t" x="172" y="390" font-size="10">← Deployment</text>
-<text class="m dep-t" x="164" y="456" font-size="10">← Deployment</text>
+<text class="m cfg-t" x="148" y="214" font-size="10">← Configuration</text>
+<text class="m dep-t" x="172" y="478" font-size="10">← Deployment</text>
+<text class="m dep-t" x="164" y="544" font-size="10">← Deployment</text>
 
 <!-- badges -->
 <g class="m" font-size="8.5" text-anchor="middle">
 <rect class="bd-always" x="340" y="136" width="52" height="17" rx="5"/><text class="bd-always-t" x="366" y="148">ALWAYS</text>
-<rect class="bd-always" x="340" y="202" width="52" height="17" rx="5"/><text class="bd-always-t" x="366" y="214">ALWAYS</text>
+<rect class="bd-always" x="340" y="158" width="52" height="17" rx="5"/><text class="bd-always-t" x="366" y="170">ALWAYS</text>
 <rect class="bd-always" x="340" y="224" width="52" height="17" rx="5"/><text class="bd-always-t" x="366" y="236">ALWAYS</text>
 <rect class="bd-always" x="340" y="246" width="52" height="17" rx="5"/><text class="bd-always-t" x="366" y="258">ALWAYS</text>
-<rect class="bd-ondemand" x="340" y="268" width="68" height="17" rx="5"/><text class="soft" x="374" y="280">ON DEMAND</text>
-<rect class="bd-ondemand" x="340" y="290" width="68" height="17" rx="5"/><text class="soft" x="374" y="302">ON DEMAND</text>
-<rect class="bd-ondemand" x="340" y="312" width="68" height="17" rx="5"/><text class="soft" x="374" y="324">ON DEMAND</text>
-<rect class="bd-ondemand" x="340" y="334" width="68" height="17" rx="5"/><text class="soft" x="374" y="346">ON DEMAND</text>
-<rect class="bd-search" x="340" y="488" width="74" height="17" rx="5"/><text class="soft" x="377" y="500">SEARCHABLE</text>
+<rect class="bd-always" x="340" y="268" width="52" height="17" rx="5"/><text class="bd-always-t" x="366" y="280">ALWAYS</text>
+<rect class="bd-always" x="340" y="290" width="52" height="17" rx="5"/><text class="bd-always-t" x="366" y="302">ALWAYS</text>
+<rect class="bd-always" x="340" y="312" width="52" height="17" rx="5"/><text class="bd-always-t" x="366" y="324">ALWAYS</text>
+<rect class="bd-always" x="340" y="334" width="52" height="17" rx="5"/><text class="bd-always-t" x="366" y="346">ALWAYS</text>
+<rect class="bd-ondemand" x="340" y="356" width="68" height="17" rx="5"/><text class="soft" x="374" y="368">ON DEMAND</text>
+<rect class="bd-ondemand" x="340" y="378" width="68" height="17" rx="5"/><text class="soft" x="374" y="390">ON DEMAND</text>
+<rect class="bd-ondemand" x="340" y="400" width="68" height="17" rx="5"/><text class="soft" x="374" y="412">ON DEMAND</text>
+<rect class="bd-ondemand" x="340" y="422" width="68" height="17" rx="5"/><text class="soft" x="374" y="434">ON DEMAND</text>
+<rect class="bd-search" x="340" y="576" width="74" height="17" rx="5"/><text class="soft" x="377" y="588">SEARCHABLE</text>
 </g>
 
 <!-- notes -->
 <g class="m faint" font-size="9">
-<text x="440" y="148">you write this; it points at os/</text>
-<text x="440" y="258">active entries only</text>
-<text x="440" y="280">at session close</text>
-<text x="340" y="412">not loaded · it fills the others</text>
-<text x="340" y="478">not loaded · it's run, not read</text>
-<text x="440" y="500">only the match loads</text>
+<text x="440" y="148">thin; it imports AGENTS.md</text>
+<text x="440" y="170">you write this; it points at os/</text>
+<text x="440" y="236">the Start Sequence</text>
+<text x="440" y="302">active entries only</text>
+<text x="440" y="324">yours only, by git email</text>
+<text x="440" y="346">the newest entry only</text>
+<text x="440" y="368">at session close</text>
+<text x="340" y="500">not loaded · it fills the others</text>
+<text x="340" y="566">not loaded · it's run, not read</text>
+<text x="440" y="588">only the match loads</text>
 </g>
 
 <!-- legend -->
-<line class="rule" x1="40" y1="528" x2="640" y2="528"/>
+<line class="rule" x1="40" y1="616" x2="640" y2="616"/>
 <g class="m" font-size="8.5" text-anchor="middle">
-<rect class="bd-always" x="62" y="546" width="52" height="17" rx="5"/><text class="bd-always-t" x="88" y="558">ALWAYS</text>
-<rect class="bd-ondemand" x="300" y="546" width="68" height="17" rx="5"/><text class="soft" x="334" y="558">ON DEMAND</text>
-<rect class="bd-search" x="62" y="574" width="74" height="17" rx="5"/><text class="soft" x="99" y="586">SEARCHABLE</text>
+<rect class="bd-always" x="62" y="634" width="52" height="17" rx="5"/><text class="bd-always-t" x="88" y="646">ALWAYS</text>
+<rect class="bd-ondemand" x="300" y="634" width="68" height="17" rx="5"/><text class="soft" x="334" y="646">ON DEMAND</text>
+<rect class="bd-search" x="62" y="662" width="74" height="17" rx="5"/><text class="soft" x="99" y="674">SEARCHABLE</text>
 </g>
 <g class="m soft" font-size="9">
-<text x="124" y="558">every session</text>
-<text x="378" y="558">when the task calls for it</text>
-<text x="146" y="586">only the skill the registry matches</text>
+<text x="124" y="646">every session</text>
+<text x="378" y="646">when the task calls for it</text>
+<text x="146" y="674">only the skill the registry matches</text>
 </g>
-<text class="m faint" x="380" y="586" font-size="9">indigo = Configuration · olive = Deployment</text>
+<text class="m faint" x="380" y="674" font-size="9">indigo = Configuration · olive = Deployment</text>
 
-<text class="b soft" x="40" y="620" font-size="12.5" font-style="italic">Five skills fit in a session. Forty don't, and the failure is quiet.</text>
-<text class="m faint" x="40" y="644" font-size="9.5">Load classes are design intent. Your runtime honors them only if your context file says so.</text>
+<text class="b soft" x="40" y="708" font-size="12.5" font-style="italic">Five skills fit in a session. Forty don't, and the failure is quiet.</text>
+<text class="m faint" x="40" y="732" font-size="9.5">Load classes are design intent. Your runtime honors them only if your context file says so.</text>
 </svg>

@@ -1,0 +1,69 @@
+# Eval cases for the session-start skill template.
+#
+# Each case is runnable by hand: set up the fixture, run the skill (which runs the Start Sequence
+# in os/session-start.md), and check whether the orientation report matches
+# expected_findings. Invented examples for a fictional firm.
+
+cases:
+  - id: session-start-01-no-matching-operator
+    description: >-
+      A session whose git email matches no operator profile must stop and ask who is running
+      it, not fall back to the only profile it finds.
+    fixture:
+      git_config_user_email: "new.person@example.com"
+      operator_profiles: "os/operators/founder.md lists founder@example.com only."
+    input: Start the session.
+    expected_findings:
+      - "Reports that no profile in os/operators/ matches the session's git email."
+      - "Stops and asks who is running the session instead of loading the founder's profile."
+    pass_criteria: >-
+      The founder's profile is not loaded and the session does not begin work; the report names
+      the unmatched email as the reason it stopped.
+
+  - id: session-start-02-two-matching-operators
+    description: >-
+      Two profiles listing the same git email is an ambiguity the session must surface, not
+      resolve by picking the first file alphabetically.
+    fixture:
+      git_config_user_email: "shared@example.com"
+      operator_profiles: "os/operators/alex.md and os/operators/sam.md both list shared@example.com."
+    input: Start the session.
+    expected_findings:
+      - "Reports that two profiles match and names both files."
+      - "Stops and asks which operator is running the session."
+    pass_criteria: >-
+      Neither profile is loaded, and the report names both matching files so the duplicate can
+      be fixed at its source.
+
+  - id: session-start-03-behind-remote
+    description: >-
+      A worktree behind the remote default branch must say so and read the files it relies on
+      from the remote ref, because the handoff it is about to follow may already be done.
+    fixture:
+      branch_state: "The worktree is 6 commits behind the remote default branch after a fetch."
+      handoff_newest_entry: "Next Session Prompt: run the pricing-page lane."
+      remote_history: "A merged pull request on the remote default branch already ran that lane."
+    input: Start the session and pick up from the handoff.
+    expected_findings:
+      - "Reports the worktree as behind the remote default branch, with the count."
+      - "Checks the remote history before acting on the Next Session Prompt and reports that the
+        lane it names already ran."
+    pass_criteria: >-
+      The session does not re-run work the remote branch already contains; it reads the remote
+      state before following a handoff written against an older tree.
+
+  - id: session-start-04-clean-solo-start
+    description: >-
+      A firm of one with one profile, a clean tree level with the remote, and every needed tool
+      present should orient briefly and begin, with no invented warnings.
+    fixture:
+      operating_mode: "operators: solo, close_mode: commit"
+      git_config_user_email: "founder@example.com"
+      operator_profiles: "os/operators/founder.md lists founder@example.com."
+      branch_state: "Clean, level with the remote default branch."
+    input: Start the session.
+    expected_findings: []
+    pass_criteria: >-
+      The orientation report has all five lines (operator, picking up from, where, tools,
+      few-person mode), reports "solo mode" for the last, raises nothing that is not true, and
+      the session proceeds without asking for a go-ahead.

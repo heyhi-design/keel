@@ -22,8 +22,10 @@ Detail: [`three-layer-model.md`](three-layer-model.md)
 
 ![A file tree of the scaffold with a load class on every entry: always, on demand, searchable, or not loaded at all.](diagrams/what-loads.svg)
 
-Most of the scaffold never enters a session. Three files load every time. Four load only when a task
-calls for them. The skills load only when the registry matches one, and your company profile never
+Most of the scaffold never enters a session. The root instruction file (a thin `CLAUDE.md` that
+imports `AGENTS.md`) and three core files load every time, plus three small reads the start of
+every session makes (the start sequence, your operator profile, and the newest entry of your
+handoff file). Four load only when a task calls for them. The skills load only when the registry matches one, and your company profile never
 loads at all, because its job is to fill the other files rather than to sit in context.
 
 This is what "Earn the Room" means in practice: nothing gets context by default.

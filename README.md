@@ -82,9 +82,11 @@ Full explanation: `docs/three-layer-model.md`. All five figures in one place: `d
 - `os/` : the configuration layer. Your agent's context bundle, operating principles, session
   workflow, and corrections memory, all as fillable templates.
 - `profile/` : the intake schema that captures your firm's identity, voice, and services.
-- `skills/` : five parameterized starter skills (`voice`, `proposal`, `session-integrity`,
-  `project-scanner`, and `intelligence-processor`), the registry that lets your agent find them,
-  and evaluation cases for each.
+- `skills/` : seven parameterized starter skills (`voice`, `proposal`, `session-integrity`,
+  `project-scanner`, `intelligence-processor`, `session-start` and `session-end`), the registry
+  that lets your agent find them, and evaluation cases for each.
+- `AGENTS.md` and a thin `CLAUDE.md` : the root instruction file every session loads, readable by
+  any runtime that reads `AGENTS.md`. `SETUP.md` covers joining an instance that already runs.
 - `docs/` : the setup guide, the three-layer model, the architecture figures, and your memory
   options.
 - `examples/` : one worked instance, filled in end to end for a firm that doesn't exist, so you

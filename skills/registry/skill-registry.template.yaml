@@ -3,7 +3,7 @@
 #
 # What this is: the discovery-aware capability index for your firm's skills. It is how an agent
 #   finds the right skill for a task instead of loading every skill every session ("Earn the
-#   Room" applied to context). This template ships the SCHEMA already populated with the FIVE
+#   Room" applied to context). This template ships the SCHEMA already populated with the SEVEN
 #   starter skills in skills/templates/, so the search has something real to route against out of
 #   the box. Adjust each entry to your filled-in skills, and add one for every new skill you write.
 # When it loads: on demand, via skill-registry.py, when an agent needs to route a task.
@@ -11,7 +11,7 @@
 #   finds it by default, point each entry's `location` at where you deploy that skill (see the
 #   location convention below), and run `python3 skill-registry.py --stats` to confirm it parses.
 #   Delete this comment block when done.
-# Note on --stats: with these five starter skills registered, --stats already shows a positive
+# Note on --stats: with these seven starter skills registered, --stats already shows a positive
 #   saving in a typical session. The figure only reads negative if you cut the registry down to
 #   one or two capabilities, where the flat discovery cost exceeds the whole tiny index. Savings
 #   compound with the number of skills.
@@ -55,19 +55,22 @@
 meta:
   version: "0.1.0"
   last_updated: null
-  total_capabilities: 5
-  skills: 5
+  total_capabilities: 7
+  skills: 7
   references: 0
   tools: 0
 
 capabilities:
 
-  # These five entries describe the starter skills this repository ships in skills/templates/.
+  # These seven entries describe the starter skills this repository ships in skills/templates/.
   # They are populated so the search has something real to route against before you have written
   # anything of your own. Adjust each one's wording to match your filled-in skills, and add an
   # entry for every new skill you write. The session-integrity / project-scanner pair below is a
   # worked example of not_for disambiguation: both read your tracking files, so each names the
-  # other to keep a quick status request and an end-of-session review from colliding.
+  # other to keep a quick status request and an end-of-session review from colliding. The
+  # session-start / session-end / session-integrity trio is a second one: session-end owns the
+  # closing phrasings (it runs session-integrity first for a substantial session),
+  # session-integrity owns the reviewing ones, and each not_for clause names the neighbour.
 
   - id: voice
     name: Voice
@@ -140,11 +143,12 @@ capabilities:
       - "wrap up this session"
       - "review what we did"
       - "did we miss anything"
-      - "close out the session"
+      - "review this session"
     dependencies: []
     not_for:
       - "A quick where-are-we status pulse with no session to close (use project-scanner)"
-    load_cost_tokens: 1500
+      - "Handing off to the next session and closing the branch (use session-end)"
+    load_cost_tokens: 1600
     location: .claude/skills/session-integrity/SKILL.md
 
   - id: project-scanner
@@ -192,3 +196,54 @@ capabilities:
     dependencies: []
     load_cost_tokens: 1200
     location: .claude/skills/intelligence-processor/SKILL.md
+
+  - id: session-start
+    name: Session Start
+    type: skill
+    description: >-
+      Orient a new work session before any real work: confirm which operator is running it,
+      load the always-loaded core, pick up from the newest handoff entry, and check the branch,
+      worktree, and available tools. Use at the start of every session.
+    semantic_tags:
+      - session start
+      - orientation
+      - operator
+      - pick up
+      - handoff entry
+    trigger_patterns:
+      - "start the session"
+      - "get me oriented"
+      - "pick up where I left off"
+      - "what did the last session leave me"
+    dependencies: []
+    not_for:
+      - "Handing off or ending a session (use session-end)"
+    load_cost_tokens: 740
+    location: .claude/skills/session-start/SKILL.md
+
+  - id: session-end
+    name: Session End
+    type: skill
+    description: >-
+      Close a work session and hand it off: persist the Exit Gate report to the operator's
+      handoff file or the pull request body, rotate the handoff file, and close the work by the
+      instance's close mode so no branch is left stranded. Use when you are done for now.
+    semantic_tags:
+      - session end
+      - handoff
+      - close mode
+      - pull request
+      - rotation
+    trigger_patterns:
+      - "end the session and hand off"
+      - "I'm done for today"
+      - "close the session"
+      - "that's it for now"
+      - "write the handoff"
+      - "close it out and open the PR"
+      - "wrap up and open the PRs"
+    dependencies: []
+    not_for:
+      - "Checking a session's own output for consistency and propagation (use session-integrity)"
+    load_cost_tokens: 860
+    location: .claude/skills/session-end/SKILL.md

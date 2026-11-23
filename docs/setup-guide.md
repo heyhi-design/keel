@@ -20,6 +20,11 @@ do: drop `.template` from each filename and nothing else needs repointing. (The 
 `.template` name is written on purpose are the few lines that explain this rename itself, such as
 in `os/corrections/LIFECYCLE.md`.)
 
+Two templates are copied rather than renamed, because there is one filled copy per person:
+`os/operators/operator.template.md` becomes `os/operators/<operator-id>.md`, and
+`os/handoff.template.md` becomes `os/handoff/<operator-id>.md`. Keep those two templates in place
+for the next person.
+
 ## Step 0: Verify your own environment
 
 Before filling in anything, confirm the basics work:
@@ -70,6 +75,8 @@ the rename rule above:
 
 - `os/agent-context.template.md` becomes your agent's always-loaded identity file.
 - `os/operating-principles.template.md` becomes your binding constraints file.
+- `os/session-start.template.md` becomes your Start Sequence: the short procedure every session
+  runs first, and the list of capabilities your instance relies on.
 - `os/session-rules.template.md` becomes your session workflow, including the Exit Gate.
 - `os/decision-log.template.md` becomes your append-only decision record, started empty.
 - `os/project-state.template.yaml` and `os/dependency-graph.template.json` become your ground-truth
@@ -79,12 +86,26 @@ the rename rule above:
   framework-level starter corrections; merge the ones you want into your registry and recompute its
   `meta` counts (the bootstrap prompt does this merge and recount for you).
 
-Not all seven of these load the same way. Three form your **always-loaded core**, read at the start
-of every session: `agent-context`, `operating-principles`, and the active entries of your
-`corrections-registry`. The other four are **on-demand** files your context file points at, read
-only when a task needs them: `session-rules` (at session close), `decision-log`, `project-state`,
-and `dependency-graph`. You fill in all seven the same way; the difference is only when each gets
-loaded, and Step 4 is where you wire that up.
+Then make your per-person copies (one each for a firm of one):
+
+- `os/operators/operator.template.md` becomes `os/operators/<operator-id>.md`: who you are, the
+  git email a session matches you by, how to work with you, and your approval rights.
+- `os/handoff.template.md` becomes `os/handoff/<operator-id>.md`: where each session's Exit Gate
+  report is written, newest first.
+
+Not all of these load the same way. Three form your **always-loaded core**, read at the start of
+every session: `agent-context`, `operating-principles`, and the active entries of your
+`corrections-registry`. Three small reads join them at the start of every session, through the
+Start Sequence: `session-start` itself, your operator profile (matched by your git email), and
+the newest entry of your handoff file. The rest are **on-demand** files your root instruction
+file points at, read only when a task needs them: `session-rules` (at session close),
+`decision-log`, `project-state`, and `dependency-graph`. You fill in all eight configuration
+templates the same way; the difference is only when each gets loaded, and Step 4 is where you
+wire that up.
+
+`os/project-state.yaml` carries an `operating_mode` block. Leave it at `operators: solo` and
+`close_mode: commit` for a firm of one; `docs/operating-with-more-than-one.md` covers when to
+change it.
 
 **You know it worked when:** none of the `os/` templates you filled still hold a `[BRACKETED SLOT]`.
 Ask your agent to scan the files you filled for leftover template brackets; it can tell a real slot
@@ -97,11 +118,11 @@ aren't.
 
 ## Step 3: Fill in and register your skills
 
-Fill in the five starter skills under `skills/templates/` from your profile, renaming each
+Fill in the seven starter skills under `skills/templates/` from your profile, renaming each
 `SKILL.template.md` to `SKILL.md` (and `reference.template.md` to `reference.md`) per the rename
 rule. Then register them in `skills/registry/skill-registry.yaml` (rename it from
 `.template.yaml`) so your agent finds the right one by search instead of loading all of them into
-every session. The registry already ships an entry for each of the five starters; adjust each
+every session. The registry already ships an entry for each of the seven starters; adjust each
 entry's wording and its `location` to where you deploy the skill (Step 4). See `skills/README.md`
 for the authoring standards these skills follow, and for how to add a new one later.
 
@@ -115,53 +136,35 @@ This is the step that turns a filled-in folder into a running system. A scaffold
 is just a folder; this is how your agent tool actually loads it. The wiring is specific to your
 runtime.
 
+### The root instruction file: `AGENTS.md`
+
+This repository ships `AGENTS.md` at its root: one instruction file, written in plain Markdown, that
+names your always-loaded core, the skill-routing block, the capability rule, and the on-demand
+files. Many agent runtimes read `AGENTS.md` directly. Fill its bracketed slots, delete its setup
+box and authoring notes, and keep it short: everything in it loads every session. It lists files
+in prose rather than importing them, so it reads the same in every runtime.
+
 ### Claude Code
 
 Claude Code reads a file named `CLAUDE.md` at your repository root at the start of every session,
 and it loads skills from `.claude/skills/<name>/SKILL.md`. That is the whole wiring. Two moves:
 
-1. **Create a `CLAUDE.md` at the repository root** that points Claude Code at your filled-in `os/`
-   files. Because it loads every session, keep it short and let it reference the rest. Claude Code
-   supports `@relative/path` import lines that pull a file's contents in at load time; if you'd
-   rather not use imports, list the files in prose and tell the agent to read them. A worked
-   example:
-
-   ```markdown
-   # [Your Firm] Operating Context
-
-   @os/agent-context.md
-
-   ## Binding constraints
-   @os/operating-principles.md
-
-   ## Active corrections (load at session start)
-   At the start of every session, read the active entries of
-   os/corrections/corrections-registry.yaml and honor them. (Don't @import the whole file: that
-   pulls in superseded and retired entries too, and only the active ones should load.)
-
-   ## Skill routing
-   Before loading any skill, run:
-       python3 skills/registry/skill-registry.py "<the task, in a few words>" --confidence
-   Load only the top skill it returns (or, if it reports two close matches, ask which one).
-   Never load a skill you weren't routed to. This keeps each session's context small.
-
-   ## On demand (read when the task calls for it, not every session)
-   - Session close: os/session-rules.md (the Exit Gate)
-   - Ground truth: os/project-state.yaml
-   - Decisions, append only: os/decision-log.md
-   - Structure map: os/dependency-graph.json
-   ```
+1. **Keep the shipped `CLAUDE.md` thin.** It holds one import line, `@AGENTS.md`, which pulls the
+   root instruction file in at load time, so Claude Code and every other runtime follow the same
+   instructions. Add a line below the import only for something true of Claude Code alone. Don't
+   import the corrections registry whole: that pulls in superseded and retired entries too, and
+   only the active ones should load (`AGENTS.md` says so in prose).
 
 2. **Deploy each filled skill** to `.claude/skills/<name>/SKILL.md`. Copy
    `skills/templates/voice/SKILL.md` to `.claude/skills/voice/SKILL.md`, and the same for the
-   other four starters. Keep each skill's reference material with it: a flat `reference.md`, or a
+   other six starters. Keep each skill's reference material with it: a flat `reference.md`, or a
    `references/` folder for the skills that ship one.
 
 ### Cowork
 
 Cowork reads your project's context once you connect the repository folder in the app. Connect the
 folder (the `os/dispatch/README.md` ENV CHECK pattern is the same idea: confirm the folder is
-connected before you rely on it) and point Cowork at your always-loaded context file. Where Cowork
+connected before you rely on it) and point Cowork at your root instruction file, `AGENTS.md`. Where Cowork
 loads skills from depends on your Cowork setup rather than a fixed path here, so follow Cowork's own
 skills documentation for where the skill files live, then place your filled skills there. The shape
 is identical to Claude Code: one always-loaded context file that points at everything else, plus
@@ -170,8 +173,8 @@ below.
 
 ### The skill-routing block
 
-Whichever runtime you use, put this block in your always-loaded context file so the agent routes
-through the registry instead of loading every skill. The Claude Code worked example above already
+Whichever runtime you use, this block belongs in your always-loaded instruction file so the agent
+routes through the registry instead of loading every skill. The shipped `AGENTS.md` already
 contains it; here it is on its own to drop into any runtime's context file. Copy it as-is:
 
 ```markdown
@@ -188,21 +191,30 @@ Once wired, your repository looks like this (filled filenames, `.template` dropp
 
 ```
 your-firm-os/
-├── CLAUDE.md                        # you create this: always-loaded, points at os/
+├── AGENTS.md                        # filled: the root instruction file, always loaded
+├── CLAUDE.md                        # thin: imports AGENTS.md for Claude Code
+├── SETUP.md                         # how a second person joins
 ├── .claude/
 │   └── skills/
 │       ├── voice/SKILL.md           # deployed from skills/templates/voice/
 │       ├── proposal/SKILL.md
 │       ├── session-integrity/SKILL.md
 │       ├── project-scanner/SKILL.md
-│       └── intelligence-processor/SKILL.md
+│       ├── intelligence-processor/SKILL.md
+│       ├── session-start/SKILL.md
+│       └── session-end/SKILL.md
 ├── os/
 │   ├── agent-context.md             # filled (was agent-context.template.md)
 │   ├── operating-principles.md
+│   ├── session-start.md
 │   ├── session-rules.md
 │   ├── decision-log.md
 │   ├── project-state.yaml
 │   ├── dependency-graph.json
+│   ├── operators/
+│   │   └── <operator-id>.md         # one per person, copied from operator.template.md
+│   ├── handoff/
+│   │   └── <operator-id>.md         # one per person, copied from handoff.template.md
 │   └── corrections/
 │       ├── corrections-registry.yaml
 │       ├── seed-corrections.yaml
@@ -237,11 +249,13 @@ Voice section is underfilled: revisit Step 2.
 ## Step 6: Close your first session through the Exit Gate
 
 `os/session-rules.md` defines the Exit Gate: the required close-out slots (fixes applied, a smoke
-test, what's next) every session passes through before it ends. Use it from session one, even
-though there's nothing to fix yet. The discipline is the point, not the content.
+test, what's next) every session passes through before it ends, and The Session Close Sequence,
+which writes that report to your handoff file instead of leaving it in the chat. Run it from
+session one with the `session-end` skill, even though there's nothing to fix yet. The discipline
+is the point, not the content.
 
-**You know it worked when:** your close-out names all three slots, even if two of them read
-"nothing this session."
+**You know it worked when:** your handoff file has a first entry naming all three slots, even if
+two of them read "nothing this session."
 
 ## Step 7: Start the corrections loop
 
@@ -266,3 +280,11 @@ Everything above works with no database at all: your corrections registry and de
 plain files, already function as durable memory. If you later want your agent to recall past
 sessions by meaning rather than by you remembering which file to open, see `docs/memory.md` for
 the options and when each one is worth the setup cost.
+
+## When there is more than one of you
+
+Running sessions in parallel, or bringing a second person in, changes a handful of rules: who owns
+which files, which knowledge is shared, and how sessions close. Read
+[`operating-with-more-than-one.md`](operating-with-more-than-one.md) before either happens. A
+second person joins through [`SETUP.md`](../SETUP.md), which also has the cold-start test to run
+before you hand the instance over.

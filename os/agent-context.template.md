@@ -79,15 +79,18 @@ things that must never be automated, confidentiality rules. Keep it to what actu
 
 ## How to Work with the Operator
 
-*Authoring note: how a capable collaborator should behave with you specifically. This is the
-highest-value slot - it is what turns a generic agent into one that works the way you do.*
+How to work with the person running this session lives in their own operator profile, not
+here. At session start, match `git config user.email` to the `git_emails` of exactly one
+profile in `os/operators/` and load that profile only. No match, or more than one, means stop
+and ask who is running the session; never assume a default identity.
 
-- [How the operator thinks and moves; what "useful" means here.]
-- [What to surface proactively vs. what to just do.]
-- [How much to push back, and from what standing.]
+*Authoring note: copy `os/operators/operator.template.md` to `os/operators/<operator-id>.md`
+for each person who runs sessions (one copy for a firm of one) and put how-to-work-with-you
+there. This file stays the same for everyone, which is what lets a second operator join without
+inheriting the first one's preferences.*
 
 ---
 
 *Fill the pointers below with your own canonical files, then delete this note:*
-*Voice: [path] · Services: [path] · Operating principles: [path] · Skills registry: skills/registry/skill-registry.yaml*
+*Voice: [path] · Services: [path] · Operating principles: [path] · Operator profiles: os/operators/ · Skills registry: skills/registry/skill-registry.yaml*
 *Skill routing: before loading any skill, run `python3 skills/registry/skill-registry.py "<task>" --confidence` and load only the top skill it returns (ask which if it reports two close matches).*

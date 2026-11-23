@@ -24,11 +24,26 @@
 #   superseded_by  - (only when status: superseded) where the rule now lives instead
 #   pattern        - (optional) a short description of the failure mode and why it recurs.
 #                    Include it when the "why" is not obvious from trigger_context alone.
+#   mistake        - (optional) the concrete mistake that happened, in one or two sentences.
+#   why            - (optional) why the correction holds: the reason behind the rule.
+#   supersedes     - (optional) the id, or list of ids, of an earlier entry whose claim this
+#                    entry corrects. Distinct from superseded_by: `supersedes` points back at a
+#                    corrected entry; `superseded_by` points forward at the rule a promoted entry
+#                    became. Retire the corrected entry once this one lands.
+#   assumes_rule   - (optional, mostly on seeds) the rule this entry assumes the instance has
+#                    adopted, as "path/to/file.md § Section". An audit flags it when that file
+#                    or section is absent.
+#   valid_until    - (set by retiring) the date the entry stopped applying. The validity window
+#                    runs from origin_date to valid_until; a retired entry is stamped, never
+#                    deleted. Null on an active entry.
+#   retired_reason - (set by retiring) why the entry stopped applying.
 #
 # Note on schema compatibility: the standalone agent-corrections repo ships a compatible schema
 # and its CLI validates severity as exactly one of two values, behavioral or factual. If you
 # pair the repos, keep every severity to those two; any other value fails its validation. The
-# optional `pattern` field exists in both schemas, so it is safe to use in either.
+# optional fields above exist in both schemas, so they are safe to use in either. The CLI reads
+# entries only from the `entries:` key and fails loud on a registry whose entries sit under any
+# other key; its `migrate-key` command renames such a key in place.
 # ─────────────────────────────────────────────────────────────────────────────
 
 # classification: an optional sensitivity label for your own filing (e.g. internal /

@@ -14,6 +14,11 @@
 #   operating history and released under MIT. Fire counts are reset to zero: they have not fired
 #   in YOUR instance yet.
 #
+# The two superseded seeds carry `assumes_rule`: the rule they assume your instance has adopted.
+#   Until `os/session-rules.md` exists with that section, `corrections audit` (agent-corrections)
+#   flags them as superseded by a rule you do not have, so they are not loading. Adopt the rule,
+#   or set their status to active when you merge them.
+#
 # This file is a seed set, not a standalone registry. After merging, recompute your registry's
 # own meta counts per its counting rule.
 
@@ -62,6 +67,7 @@ entries:
     superseded_by: >-
       session-rules.md § Verify-Before-Claim. Once you adopt that standing rule, this
       specific pattern is absorbed into it. Until you do, treat this entry as ACTIVE guidance.
+    assumes_rule: "os/session-rules.md § Verify-Before-Claim"
     trigger_context: >-
       Research sessions that use a web-search tool to verify claims about third parties (people,
       events, organizations). A generated web-search summary can confidently report a connection
@@ -83,6 +89,7 @@ entries:
     superseded_by: >-
       session-rules.md § Verify-Before-Claim. Once you adopt that standing rule, this
       specific pattern is absorbed into it. Until you do, treat this entry as ACTIVE guidance.
+    assumes_rule: "os/session-rules.md § Verify-Before-Claim"
     trigger_context: >-
       Any session that adds a specific named reference, label, or taxonomic term (a named
       instrument, a pattern name, a cluster label) to a description or client-facing claim, for

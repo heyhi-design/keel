@@ -22,7 +22,7 @@ services, and nothing in it is advice about sustainability reporting.
 | [`os/agent-context.md`](baseline-year/os/agent-context.md) | [`os/agent-context.template.md`](../os/agent-context.template.md) | How short this file stays. It loads every session, so cutting matters more than covering. |
 | [`os/decision-log.md`](baseline-year/os/decision-log.md) | [`os/decision-log.template.md`](../os/decision-log.template.md) | Two entries in ten months. A log that fills up fast is recording activity, not decisions. |
 | [`os/corrections/corrections-registry.yaml`](baseline-year/os/corrections/corrections-registry.yaml) | [`os/corrections/corrections-registry.template.yaml`](../os/corrections/corrections-registry.template.yaml) | Four entries, one superseded. Trace that one against the decision-log entry of 2026-03-02 and the constraint in `os/agent-context.md`: promotion touches three files in one pass, and this is what it looks like when it was done properly. |
-| [`skills/`](baseline-year/skills) | [`skills/templates/`](../skills/templates) | All five starter skills, filled, plus a registry adjusted to describe them. Notice how much of each one is firm-specific: the templates supply the shape and almost none of the content. |
+| [`skills/`](baseline-year/skills) | [`skills/templates/`](../skills/templates) | The five original starter skills, filled, plus a registry adjusted to describe them (the example predates `session-start` and `session-end`, added in 0.3.0). Notice how much of each one is firm-specific: the templates supply the shape and almost none of the content. |
 
 Two skills also ship their filled `reference.md`. The
 [`voice`](baseline-year/skills/voice/reference.md) one, because the sounds-like/doesn't-sound-like
@@ -51,7 +51,7 @@ is: it ships precisely because its content is not derivable from an empty slot.
 - `references/review-checklist.md` (the reference material `session-integrity` carries), and the
   `reference.md` for the two skills other than `voice` and `proposal`.
 - `skills/evals/*/cases.yaml`. The scaffold's own twenty cases are already concrete, and by its
-  rules an unregistered, untested skill is a draft — so treat this example as showing what a
+  rules an unregistered, untested skill is a draft, so treat this example as showing what a
   filled skill *says*, not as a model of a fully shipped one.
 
 So a pointer inside `baseline-year/` that resolves to nothing is expected, not a broken link. Every
@@ -78,12 +78,12 @@ where it is.
 
 `docs/setup-guide.md` Step 4 has you write a `CLAUDE.md` at your **repository root**, and both
 onboarding docs tell you to recheck it first when your agent starts a session cold. It has no
-template anywhere, because its content depends on which runtime you are wiring into — a Cowork
+template anywhere, because its content depends on which runtime you are wiring into: a Cowork
 setup has an always-loaded context file too, but not this file and not at this path.
 
 It ships here as a snippet rather than as a file inside `baseline-year/`, deliberately. Claude Code
 discovers `CLAUDE.md` by path, so a file sitting in a subdirectory would be loaded by any agent
-working in that subtree — and no disclaimer can stop that, because the file is read before anyone
+working in that subtree, and no disclaimer can stop that, because the file is read before anyone
 reads the disclaimer. A copy in the wrong place would also teach the wrong placement.
 
 Here is what Baseline Year's looks like, filled from the same profile as everything else above:
@@ -136,7 +136,7 @@ every file, and keep it out of the template paths.
 
 ## Read next
 
-- [`../README.md`](../README.md) — what this repository is.
-- [`../docs/three-layer-model.md`](../docs/three-layer-model.md) — what it owns versus what your
+- [`../README.md`](../README.md): what this repository is.
+- [`../docs/three-layer-model.md`](../docs/three-layer-model.md): what it owns versus what your
   agent runtime provides. Worth reading before the setup guide.
-- [`../docs/setup-guide.md`](../docs/setup-guide.md) — placing and wiring the templates by hand.
+- [`../docs/setup-guide.md`](../docs/setup-guide.md): placing and wiring the templates by hand.

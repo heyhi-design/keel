@@ -6,6 +6,105 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once a first version is
 tagged.
 
+## [0.3.0] - 2026-11-22
+
+Few-person mode, a corrections lifecycle that keeps its own books, and a start-load check. keel
+stays a firm-of-one template in identity: running with a second person, or with several sessions
+at once, is now a documented mode with its own contract, templates and tools. Every new tool reads
+and reports by default; the few that can write need an explicit flag. keel still ships zero hooks:
+enforcement is a lint or a checklist your instance may wire into its own hooks.
+
+### Added
+
+- **Two verification disciplines on the session-rules template (`os/session-rules.template.md`)**,
+  extending Verify-Before-Claim: a blast-radius verification ladder for newly built tools (seeded
+  smoke, real-data read, adversarial pass, fresh-context reproduction, scaled to change size),
+  extended into one rule covering both sides of a build: a plan-verification rung ahead of the
+  existing rungs (re-derive every count, path, version and status a plan asserts before work
+  starts), and the fourth rung run by a fresh-context reviewer whose findings are fixed in the
+  same change. Beside it, a "report the instrument, not just the number" rule for metric claims.
+  Both are content-free Layer-2 patterns proven in a keel instance and funnelled back down into
+  the base (the keelson path).
+- **The Framing Gate and the Entry Gate (`os/session-rules.template.md`)**: two three-line
+  frontmatter blocks that open a scoped piece of work, as the Exit Gate closes it. `framing:`
+  carries `who`, `what` and a falsifiable `signal`; `entry_gate:` carries `scope`, `consumer` and
+  `blocking_unknowns`. Each has a pass condition a one-line frontmatter parse can check.
+- **Few-person mode (`docs/operating-with-more-than-one.md`)**: parallel sessions and worktrees
+  (one owner per file, ids assigned up front, a recount at merge, reap only what is merged and
+  clean), the shared-versus-personal knowledge contract (git files reviewed by pull request are
+  the shared tier; runtime memory is personal and machine-local), and when to switch on the team
+  close mode. `operating_mode` in `os/project-state.template.yaml` holds the settings.
+- **Operator profiles (`os/operators/operator.template.md`)**: one profile per person, matched by
+  `git config user.email`, with preferences and approval rights. The agent-context template's
+  "How to Work with the Operator" section now points at the matched profile.
+- **Per-operator handoff with rotation (`os/handoff.template.md`)**: `os/handoff/<operator-id>.md`,
+  newest entry first; keep the newest N (`operating_mode.handoff.keep_newest`) and move older
+  entries, unchanged and in order, to an archive. Nothing is deleted.
+- **A knowledge-ownership axis**: `layer: methodology | engagement | hybrid` plus `approver:`,
+  documented beside keelson's `origin:` tag as a separate axis, not a replacement.
+- **`session-start` and `session-end` starter skills (`skills/templates/`)**: thin triggers over
+  the Start Sequence (now in its own small `os/session-start.template.md`, which runs every
+  session) and over The Session Close Sequence, with eval cases and registry entries. The Exit Gate
+  report is persisted to the handoff file or the pull request body, not only to chat; an opt-in
+  PR-only close mode (`operating_mode.close_mode: pr`) suits a team.
+- **Session-rules sections**: The Session Close Sequence, Tools by Capability (a step names the
+  capability it needs and its fallback, never the server that provides it today) and Failure
+  Recovery.
+- **A root `AGENTS.md` with a thin `CLAUDE.md` that imports it**, so one set of instructions loads
+  whichever runtime you use; **`SETUP.md`** for joining an instance that already runs, with a
+  cold-start test.
+- **Few-person tooling (`os/`)**, each read-only or report-first:
+  - `resolve_operator.py`: `git config user.email` to exactly one active profile; zero or two
+    matches exit nonzero, by name. A firm of one with no profile is a stated skip, never an identity.
+  - `id_allocator.py`: counts ids across every local and remote branch and every worktree
+    (uncommitted files included) and prints the next free id; `--reserve N` hands out disjoint
+    blocks. Never writes.
+  - `worktree_report.py`: branch, merged, dirty, age and lock state per worktree, and the reapable
+    set. It has no flag that removes anything.
+  - `handoff_rotate.py`: the rotation rule above. Reports by default; `--apply` writes the archive
+    first, reads it back, and only then shortens the handoff.
+  - `cold_start_check.py`: clones to a fresh temp directory and checks the start files, their `@`
+    imports, every path they name, refs a fresh clone lacks, and one email per active profile.
+    `--strict` exits 1 on a failure.
+- **Two keelson lints (`keelson/`)**: `context_wall.py`, the separability check's phrase half,
+  driven by a phrase map your instance supplies (keel ships none, and the lint refuses to run
+  without one); and `close_check.py`, which checks the persisted Exit Gate report's slots.
+- **`os/status_lint.py` and `os/gen_index.py`**: a planning-artifact status-vocabulary lint, and a
+  folder index generated from frontmatter, deterministic so `--check` exits 1 on a stale index.
+- **A start-load check (`os/start_load_check.py`)**: estimates each file of your declared start set
+  in tokens (it follows `@` imports from the runtime file, then adds `os/session-start.md`, the
+  core files, the matched operator profile and the newest handoff entry; `os/start-set.yaml`
+  overrides the set), counts the corrections entries that load, labels a template standing in for
+  an unfilled file, and lists a missing file. A budget is optional: no budget is a notice, over
+  budget warns, and only `--strict` fails. No budget value ships.
+- **Corrections lifecycle (`os/corrections/LIFECYCLE.md`)**: one entry at a time (add, merge or
+  retire, never a wholesale rewrite); recording a fire on the entry itself; retiring as a stamped
+  validity window; derived counts; the active and archive split; the optional `mistake`, `why`,
+  `supersedes` and `assumes_rule` fields; seeds and the rules they assume; comparing two
+  registries. The registry template's header documents the optional fields and that the CLI reads
+  only `entries:`. The two superseded seeds carry `assumes_rule`. Four new contract tests in
+  `tests/test_corrections_contract.py`.
+
+### Changed
+
+- **Starter skills: five to seven.** "Close out the session" now routes to `session-end`;
+  `session-integrity` hands its report to The Session Close Sequence.
+- **The setup guide and the bootstrap prompt wire `AGENTS.md`.** `docs/memory.md` no longer offers
+  its Tier 3 store for several people writing one store, and gains a personal-versus-shared
+  section.
+- **CI test matrix pinned to `ubuntu-24.04`.** `ubuntu-latest` moved to an image with no Python
+  3.9, so the pin keeps the README's "CI covers 3.9" true.
+
+### Upgrading from 0.2.0
+
+- Merge the updated seeds (or add `assumes_rule` to your own), then run
+  `corrections audit --rules-root <your instance root>`. With agent-corrections 0.2.0, also run
+  `migrate-key --from <old key>` if your registry uses another top-level key, then
+  `audit --recount --write`, and record recurrences with `fire` from then on.
+- Few-person mode is opt-in: copy `os/operators/operator.template.md` once per person, create
+  `os/handoff/<operator-id>.md` from `os/handoff.template.md`, and set `operating_mode` in
+  `os/project-state.yaml`. A firm of one can skip all three.
+
 ## [0.2.0] - 2026-09-04
 
 Structure proven inside a keel instance, funnelled back down into the base. The headline is the

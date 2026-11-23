@@ -90,3 +90,52 @@ def test_the_seed_set_carries_exactly_three_injectable_active_entries():
     """
     active = [e["id"] for e in _load(SEEDS)["entries"] if e.get("status") == "active"]
     assert len(active) == 3
+
+
+# ── seeds and the rules they assume ──────────────────────────────────────────
+
+SESSION_RULES_TEMPLATE = REPO_ROOT / "os" / "session-rules.template.md"
+SECTION_SIGN = "§"
+
+
+def test_every_superseded_seed_names_the_rule_it_assumes():
+    """
+    A seed that ships `superseded` by a rule the instance never adopted silently stops loading.
+    `assumes_rule` makes that coupling checkable, so every superseded seed must carry it.
+    """
+    for entry in _load(SEEDS)["entries"]:
+        if entry.get("status") == "superseded":
+            ref = entry.get("assumes_rule")
+            assert isinstance(ref, str) and SECTION_SIGN in ref, f"{entry['id']}: no `path § section` assumes_rule"
+
+
+def test_each_assumed_rule_resolves_once_the_template_is_renamed():
+    """
+    The seeds point at `os/session-rules.md`, the name the operator gives the template on fill-in.
+    The section each one names must exist as a heading in the template, or the pointer would stay
+    absent even after the rule is adopted.
+    """
+    headings = [
+        line.lstrip("#").strip().lower()
+        for line in SESSION_RULES_TEMPLATE.read_text(encoding="utf-8").splitlines()
+        if line.startswith("#")
+    ]
+    for entry in _load(SEEDS)["entries"]:
+        ref = entry.get("assumes_rule")
+        if not ref:
+            continue
+        path_text, section = (part.strip() for part in ref.split(SECTION_SIGN, 1))
+        assert path_text == "os/session-rules.md", f"{entry['id']}: unexpected rule path {path_text!r}"
+        assert any(section.lower() in h for h in headings), f"{entry['id']}: no heading for {section!r}"
+
+
+def test_the_template_documents_the_optional_lifecycle_fields():
+    header = TEMPLATE.read_text(encoding="utf-8")
+    for field_name in ("mistake", "why", "supersedes", "assumes_rule", "valid_until", "retired_reason"):
+        assert f"#   {field_name}" in header, f"template schema header does not document {field_name!r}"
+
+
+def test_the_lifecycle_doc_carries_the_one_entry_at_a_time_rule():
+    lifecycle = (CORRECTIONS_DIR / "LIFECYCLE.md").read_text(encoding="utf-8")
+    assert "one entry at a time" in lifecycle.lower()
+    assert "never by rewriting the" in lifecycle

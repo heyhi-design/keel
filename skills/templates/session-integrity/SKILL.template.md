@@ -111,8 +111,11 @@ explicitly ("no fixes needed this session, verified by X") rather than leaving i
 
 ## Phase 9: Close
 
-Apply any approved fixes. Draft the commit message. If you're running Tier 2 or 3 memory (see
-`docs/memory.md`), save whatever this session produced that's worth recalling later.
+Apply any approved fixes. If you're running Tier 2 or 3 memory (see `docs/memory.md`), save
+whatever this session produced that's worth recalling later. Then hand this report to The Session
+Close Sequence in `os/session-rules.md` (the `session-end` skill runs it): it writes the report to
+the operator's handoff file or the pull request body and commits by the instance's close mode.
+This skill reviews; it does not decide where the report or the work goes.
 
 ## Related files
 
